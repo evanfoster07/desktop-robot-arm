@@ -1,0 +1,10 @@
+# VS code / Editors
+.pio/
+.vscode/
+
+# Fusion 360 / CAD temp files
+*.f3d.bak
+*.f3z.bak
+
+# KiCAD
+*.kicad_prl
