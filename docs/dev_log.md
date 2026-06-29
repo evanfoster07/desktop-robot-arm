@@ -15,4 +15,13 @@
 - Desgined, 3D-printed and added a clamp to the arm to stabalize wrist pitch servo
 
 ## June 27 2026
-- Design, 3D-print and attach mount for PCA9685 servo driver
+- Designed, 3D-print and attached mount for PCA9685 servo driver
+- Next: attach M-F jumper wires to lower arm for wrist roll + gripper servo wire extension 
+
+## June 29 2026
+- Attached M-F jumper wires to extend wrist roll + gripper servo wire connections
+- Tested PCA9685 servo driver and servo function with new mount + wire extensions
+- Next: 
+    - Set up TMC2209 stepper motor driver and test base rotation 
+    - Start electrical diagram and begin planning internal component placement
+
