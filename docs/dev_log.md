@@ -38,3 +38,13 @@
     - Finish electrical schematic
     - Begin planning internal wire pathing, component locations on perfboards, and communication/power terminal locations
 
+## July 2 2026
+- Finished electrical schematic primary power rails/distribution & communication connections 
+- Began planning electrical component and connector placements in Fusion 360 assembly model
+- Issue: creep in lazy susan bearing mounts where pegs can no longer hold arm upright at far extents, leading to the arm deattaching
+    - Will fix with custom threaded pegs and nuts to secure in place
+- Next:
+    - Continue planning component/connector placements for internal wiring
+    - Print and attach new lazy Susan mounts and test at max arm extent to verify mount stability at maximum torque
+
+
