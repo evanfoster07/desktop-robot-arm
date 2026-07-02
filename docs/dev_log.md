@@ -23,5 +23,18 @@
 - Tested PCA9685 servo driver and servo function with new mount + wire extensions
 - Next: 
     - Set up TMC2209 stepper motor driver and test base rotation 
-    - Start electrical diagram and begin planning internal component placement
+    - Start electrical schematic and begin planning internal component placement
+
+## June 30 2026
+- Began electrical schematic and created custom symbols for ESP32, TMC2209, and PCA9685
+- Started wiring TMC2209 stepper motor driver to test base rotation & driver control 
+- Next:
+    - Finish electrical schematic
+    - Write TMC2209 control code and test stepper motor base rotation
+
+## July 1 2026
+- Finished wiring TMC2209 stepper motor driver and tested with control code
+- Next:
+    - Finish electrical schematic
+    - Begin planning internal wire pathing, component locations on perfboards, and communication/power terminal locations
 
