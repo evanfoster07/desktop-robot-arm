@@ -47,4 +47,22 @@
     - Continue planning component/connector placements for internal wiring
     - Print and attach new lazy Susan mounts and test at max arm extent to verify mount stability at maximum torque
 
+## July 4 2026
+- Finished planning component/connector placements 
+- Organized components on perfboards to prepare for soldering 
+- Next: 
+    - Solder components and wire connections on perfboards 
+    - Crimp signal/power wires with JST XH connectors and shrink wrap together for organization
 
+## July 6 2026
+- cut, organized and crimped with JST XH connectors the required wires for internal power/signal connections
+- Next:
+    - Begin soldering header pins onto perfboard 
+    - Solder wire connections between header pins on perfboard 
+
+## July 8 2026
+- Completed soldering all female/male dupont header pins, JST XH female connectors, and power screw terminals onto perfboards
+- Began soldering 6V and GND power rails and routed to JST XH female pins for power distribution
+- Tested solder joints and performed continuity tests on completed perfboard connections
+- Next: 
+    - Continue soldering wire connections on perfboard
