@@ -66,3 +66,12 @@
 - Tested solder joints and performed continuity tests on completed perfboard connections
 - Next: 
     - Continue soldering wire connections on perfboard
+
+## July 10 2026
+- Finished soldering wire connections for both servo driver and stepper driver communication lines and power on perfboards
+- Continuity tested all connections and ensured common ground between all components
+- Verified no short circuits were present in wiring
+- Next:
+    - Attach finished perfboards to base of arm and verify function with test code
+    - Begin writing integrated control code for stepper & servo motors
+    
