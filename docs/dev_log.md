@@ -74,4 +74,9 @@
 - Next:
     - Attach finished perfboards to base of arm and verify function with test code
     - Begin writing integrated control code for stepper & servo motors
-    
+
+## July 11 2026
+- Mounted all perfboards to base of arm and attached all JST/Dupont cables 
+- Performed continuity testing between all major components' pins and checked for short circuits
+- Next: 
+    - Begin writing integrated control code for all motor control
