@@ -80,3 +80,12 @@
 - Performed continuity testing between all major components' pins and checked for short circuits
 - Next: 
     - Begin writing integrated control code for all motor control
+
+## July 14 2026
+- Began writing main servo & stepper control code
+- Implemented the following:
+    - Base rotation test code 
+    - TMC2209 configuration via UART communication using TMCstepper library
+    - PC -> ESP32 Serial commands for testing & controlling motors
+- Next:
+    - Implement control for servos using I2C pins and Adafruit PWM Servo Driver library to communicate with PCA9685
