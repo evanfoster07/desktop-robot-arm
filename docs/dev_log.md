@@ -103,3 +103,17 @@
     - Configure and test PCA9685 communication over I2C
     - Implement servo control commands for all arm joints
     - Expand serial interface to support individual joint angle commands
+
+## July 15 2026
+- Continued development of main servo & stepper control code
+- Implemented the following:
+    - Servo angle control via Serial commands 
+    - `ServoJoint` struct + array architecture for individual servo data organization and accessibility. Includes:
+        - Per-servo pulse calibration
+        - State tracking
+        - Home angles 
+    - Improved Serial command parsing to allow testing, calibration and servo/base rotation angle/step selection
+
+- Next:
+    - Finish per-servo calibration values using pulse selection Serial commands
+    - Fully assemble arm and attempt object manipulation using manual joint position control
