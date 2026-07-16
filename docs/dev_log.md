@@ -117,3 +117,15 @@
 - Next:
     - Finish per-servo calibration values using pulse selection Serial commands
     - Fully assemble arm and attempt object manipulation using manual joint position control
+
+## July 16 2026
+- Finished per-servo pulse width calibration and implemented as constant values in code 
+- Tested object manipulation via manual servo control
+
+- Issue: NEMA 17 stepper motor rotates slightly in base frame during direction changes
+    - Fix: secure NEMA 17 using custom 3D printed inserts
+
+- Next:
+    - Design & print inserts to secure NEMA 17 stepper motor
+    - Begin writing class for inverse/forward kinematics
+    - Refactor motor control logic into separate .h and .cpp files
