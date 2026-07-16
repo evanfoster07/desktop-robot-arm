@@ -27,11 +27,16 @@ constexpr int wrist_roll = 3;
 constexpr int gripper = 4;
 
 //Servo calibration constants 
-constexpr int SERVO_MIN_US = 500;
-constexpr int SERVO_MAX_US = 2500;
-
+constexpr int SHOULDER_MIN_US = 800;
+constexpr int SHOULDER_MAX_US = 2420;
 constexpr int ELBOW_MIN_US = 650;
 constexpr int ELBOW_MAX_US = 2630;
+constexpr int WPITCH_MIN_US = 550;
+constexpr int WPITCH_MAX_US = 2620;
+constexpr int WROLL_MIN_US = 500;
+constexpr int WROLL_MAX_US = 2620;
+constexpr int GRIPPER_MIN_US = 500;
+constexpr int GRIPPER_MAX_US = 1550;
 
 constexpr int SERVO_FREQUENCY = 50;     // 50 Hz
 
@@ -71,11 +76,11 @@ struct ServoJoint {
 };
 
 ServoJoint servos[] = {
-    {"shoulder", 0, 70, 70, 0, 180, SERVO_MIN_US, SERVO_MAX_US},
-    {"elbow", 1, 110, 110, 0, 180, SERVO_MIN_US, SERVO_MAX_US},
-    {"wrist_pitch", 2, 60, 60, 0, 180, SERVO_MIN_US, SERVO_MAX_US},
-    {"wrist_roll", 3, 90, 90, 0, 180, SERVO_MIN_US, SERVO_MAX_US},
-    {"gripper", 4, 80, 80, 0, 80, SERVO_MIN_US, SERVO_MAX_US}
+    {"shoulder", shoulder, 70, 70, 20, 160, SHOULDER_MIN_US, SHOULDER_MAX_US},
+    {"elbow", elbow, 110, 110, 0, 180, ELBOW_MIN_US, ELBOW_MAX_US},
+    {"wrist_pitch", wrist_pitch, 60, 60, 0, 180, WPITCH_MIN_US, WPITCH_MAX_US},
+    {"wrist_roll", wrist_roll, 90, 90, 0, 180, WROLL_MIN_US, WROLL_MAX_US},
+    {"gripper", gripper, 60, 60, 0, 80, GRIPPER_MIN_US, GRIPPER_MAX_US}
 };
 
 
