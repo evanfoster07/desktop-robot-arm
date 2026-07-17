@@ -129,3 +129,12 @@
     - Design & print inserts to secure NEMA 17 stepper motor
     - Begin writing class for inverse/forward kinematics
     - Refactor motor control logic into separate .h and .cpp files
+
+## July 17 2026 
+- Refactored motor control and command logic into separate .h and .cpp files 
+- Designed and printed inserts to secure NEMA 17 stepper motor
+- Tested motor control using refactored code and calibrated arm home position
+
+- Next:
+    - Begin writing classes for inverse/forward kinematics
+    - Add individual speed control for all servo joints via non-blocking timing logic
