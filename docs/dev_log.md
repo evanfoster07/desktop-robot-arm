@@ -138,3 +138,11 @@
 - Next:
     - Begin writing classes for inverse/forward kinematics
     - Add individual speed control for all servo joints via non-blocking timing logic
+
+## July 18 2026
+- Implemented non-blocking per-servo interpolation with configurable movement speeds and continuous state-based servo updates
+- Added optional per-servo interpolation, allowing individual joints to move either smoothly or instantly
+
+- Next: 
+    - Begin implementing forward kinematics to calculate the end-effector position from joint angles
+    - Define arm's link lengths and joint rotation directions in code
