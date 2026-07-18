@@ -8,3 +8,12 @@
 
 # KiCAD
 *.kicad_prl
+*.kicad_prl-bak
+*-backups/
+*.autosave
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
