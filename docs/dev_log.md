@@ -12,10 +12,10 @@
 ## June 25 2026
 - Tested PCA9685 servo driver using Adafruit servo driver library examples
 - Configured PCA9685 and calibrated min/max pulse width values for accurate positioning
-- Desgined, 3D-printed and added a clamp to the arm to stabalize wrist pitch servo
+- Designed, 3D-printed and added a clamp to the arm to stabilize wrist pitch servo
 
 ## June 27 2026
-- Designed, 3D-print and attached mount for PCA9685 servo driver
+- Designed, 3D-printed and attached mount for PCA9685 servo driver
 
 - Next: attach M-F jumper wires to lower arm for wrist roll + gripper servo wire extension 
 
@@ -45,7 +45,7 @@
 ## July 2 2026
 - Finished electrical schematic primary power rails/distribution & communication connections 
 - Began planning electrical component and connector placements in Fusion 360 assembly model
-- Issue: creep in lazy susan bearing mounts where pegs can no longer hold arm upright at far extents, leading to the arm deattaching
+- Issue: creep in lazy susan bearing mounts where pegs can no longer hold arm upright at far extents, leading to the arm detaching
     - Will fix with custom threaded pegs and nuts to secure in place
 
 - Next:
@@ -95,7 +95,7 @@
 - Began writing main servo & stepper control code
 - Implemented the following:
     - Base rotation control using AccelStepper
-    - TMC2209 configuration via UART communication using TMCstepper library
+    - TMC2209 configuration via UART communication using TMCStepper library
     - PC -> ESP32 Serial commands for testing & controlling motors
 - Successfully tested bidirectional base rotation through serial commands
 
