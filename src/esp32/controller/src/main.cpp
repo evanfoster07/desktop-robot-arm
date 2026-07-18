@@ -19,4 +19,5 @@ void loop() {
 
     readSerialCommands();
     updateStepper();
+    updateServos();
 }

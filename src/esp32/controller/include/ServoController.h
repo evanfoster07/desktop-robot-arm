@@ -22,15 +22,19 @@ enum class ServoId : uint8_t {
 struct ServoJoint {
     const char* name;
     uint8_t channel;
-
     int homeAngle;
-    int currAngle;
+
+    float currAngle;
+    float targetAngle;
 
     int minAngle;
     int maxAngle;
 
     int minPulseUS;
     int maxPulseUS;
+
+    bool interpolationEnabled;
+    float speedDegPerSec;
 };
 
 
@@ -53,6 +57,14 @@ void setServoAngle(ServoId servoId, int requestedAngle);
     Writes a pulse width directly to a servo. Primarily used for calibration
 */
 void writeServoPulse(ServoId servoId, int pulseWidthUS);
+
+
+/*
+    Advances servos with interpolation toward their target angles
+
+    Must be called repeatedly from loop()
+*/
+void updateServos();
 
 
 /*
