@@ -155,4 +155,11 @@
 - Next:
     - Implement inverse kinematics
     - Verify forwards kinematics accuracy with pose calculations from given joint angles
+
+## July 22 2026
+- Completed Fusion 360 CAD assembly to verify joint angles & positions for inverse/forward kinematics
+
+- Next:
+    - Implement inverse kinematics
+    - Verify forwards/inverse kinematics with CAD model and by replicating physical positions
     
