@@ -163,3 +163,14 @@
     - Implement inverse kinematics
     - Verify forwards/inverse kinematics with CAD model and by replicating physical positions
     
+## July 24 2026
+- Implemented IK math in InverseKinematics class and verified calculations between FK/IK
+- Refactored robot arm control into RobotArmControl class:
+    - Contains high-level control responsibilities
+    - Central class for initialization and update logic
+    - Improved organization to prepare for joint mapping and cartesian motion
+    - No functional behaviour changes
+
+- Next:
+    - Map mathematical IK angles to raw servo command angles
+    - Verify raw servo command angle mapping is accurate by testing various cartesian poses
