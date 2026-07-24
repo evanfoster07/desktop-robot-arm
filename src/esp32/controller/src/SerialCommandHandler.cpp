@@ -2,12 +2,12 @@
 
 #include <Arduino.h>
 
-#include "ServoController.h"
-#include "StepperController.h"
+#include "RobotArmControl.h"
 
 namespace {
 
     String inputBuffer;
+    RobotArmControl* robotArm = nullptr;
 
     bool requireValue(const String& command, bool hasValue) {
             if (hasValue) {
@@ -25,20 +25,20 @@ namespace {
 
         // Commands that do not require a number can be handledbefore requireValue() checks.
         if (command == "home") {    
-            homeServos();
+            robotArm->homeServos();
             Serial.println("Servos home");
             return;
         }
 
         if (command == "stop") {
-            stopBase();
+            robotArm->stopBase();
             Serial.println("Base stopping");
             return;
         }
 
         if (command == "position") {
             Serial.print("Base position: ");
-            Serial.println(getBasePosition());
+            Serial.println(robotArm->getBasePosition());
             return;
         }
 
@@ -55,19 +55,19 @@ namespace {
         // Normal angle commands
 
         if (command == "s") {
-            setServoAngle(ServoId::Shoulder, value);
+            robotArm->setServoAngle(ServoId::Shoulder, value);
         }
         else if (command == "e") {
-            setServoAngle(ServoId::Elbow, value);
+            robotArm->setServoAngle(ServoId::Elbow, value);
         }
         else if (command == "p") {
-            setServoAngle(ServoId::WristPitch, value);
+            robotArm->setServoAngle(ServoId::WristPitch, value);
         }
         else if (command == "r") {
-            setServoAngle(ServoId::WristRoll, value);
+            robotArm->setServoAngle(ServoId::WristRoll, value);
         }
         else if (command == "g") {
-            setServoAngle(ServoId::Gripper, value);
+            robotArm->setServoAngle(ServoId::Gripper, value);
         }
 
 
@@ -75,25 +75,25 @@ namespace {
         // Direct pulse-width calibration commands
 
         else if (command == "scal") {
-            writeServoPulse(ServoId::Shoulder, value);
+            robotArm->writeServoPulse(ServoId::Shoulder, value);
         }
         else if (command == "ecal") {
-            writeServoPulse(ServoId::Elbow, value);
+            robotArm->writeServoPulse(ServoId::Elbow, value);
         }
         else if (command == "pcal") {
-            writeServoPulse(ServoId::WristPitch, value);
+            robotArm->writeServoPulse(ServoId::WristPitch, value);
         }
         else if (command == "rcal") {
-            writeServoPulse(ServoId::WristRoll, value);
+            robotArm->writeServoPulse(ServoId::WristRoll, value);
         }
         else if (command == "gcal") {
-            writeServoPulse(ServoId::Gripper, value);
+            robotArm->writeServoPulse(ServoId::Gripper, value);
         }
 
 
         // Relative base movement in target steps
         else if (command == "base") {
-            moveBase(value);
+            robotArm->moveBase(value);
         }
 
 
@@ -150,7 +150,9 @@ namespace {
     }
 }
 
-void beginSerialCommands() {
+void beginSerialCommands(RobotArmControl& controller) {
+
+    robotArm = &controller;
 
     inputBuffer.reserve(64);    // Reserve space in buffer to reduce repeated dynamic memory allocation
 }

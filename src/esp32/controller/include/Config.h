@@ -1,5 +1,6 @@
 #pragma once
 
+#include "KinematicsData.h"
 #include <Arduino.h>
 
 namespace Pins {
@@ -26,7 +27,7 @@ namespace StepperConfig {
     constexpr uint32_t UART_BAUD_RATE = 115200;
 
     //TMC2209 config
-    constexpr uint16_t RMS_CURRENT_MA = 500;
+    constexpr uint16_t RMS_CURRENT_MA = 1000;
     constexpr uint16_t MICROSTEPS = 16;
 
     constexpr float MAX_SPEED = 800.0f;
@@ -38,4 +39,15 @@ namespace ServoConfig {
     //PCA9685 address & PWM frequency
     constexpr uint8_t PCA9685_ADDRESS = 0x40;
     constexpr int PWM_FREQUENCY = 50;     // 50 Hz
+}
+
+//  Geometry config (mm)
+namespace KinematicsConfig {
+    constexpr ArmGeometry ARM_GEOMETRY
+    {
+        130.0f,     // Base bottom to shoulder axis height
+        130.0f,     // Shoulder to elbow 
+        63.0f,      // Elbow to wrist pitch 
+        120.0f      // Wrist pitch to gripper reference
+    };
 }

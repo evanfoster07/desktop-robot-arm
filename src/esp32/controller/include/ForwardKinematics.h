@@ -27,7 +27,7 @@ private:
     const ArmGeometry geometry;
 
     /*
-        Angle unit conversions so code is easier to understand
+        Angle unit conversion helpers
     */
    static float degToRads(float degrees);
    static float radsToDeg(float radians);

@@ -1,9 +1,12 @@
 #pragma once
 
+class RobotArmControl;
+
 /*
-    Initializes any state required by the command handler.
+    Connects the serial command handler to the robot arm controller and
+    initializes the input buffer.
 */
-void beginSerialCommands();
+void beginSerialCommands(RobotArmControl& robotArm);
 
 /*
     Reads available characters from the PC serial connection.
