@@ -174,3 +174,17 @@
 - Next:
     - Map mathematical IK angles to raw servo command angles
     - Verify raw servo command angle mapping is accurate by testing various cartesian poses
+
+## July 25 2026 
+- Finished mapping math IK angles to raw servo commands with JointMapper class and per-servo calibration
+- Added unmap() function to reverse mapping operation so FK can be used to obtain cartesian poses from JointAngles
+- Implemented poses.h to store cartesian poses for the arm to achieve through serial commands
+- Issue:
+    - Unmapped physical servo angles give reasonable FK estimate, but when the output cartesian pose is commanded,
+    some are calculated as unreachable under servo constraints 
+    - Possible fix: 
+        - verify constraints are accurate and code from physical angles -> mathematical angles -> FK -> cartesian pose to verify proper calculations
+        - Add tolerance to safe servo angles to allow rounding/floating-point differences between FK/IK to achieve similar poses
+
+- Next: 
+    - Verify kinematics calculations & test if tolerance fixes pose issue
