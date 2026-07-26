@@ -68,15 +68,20 @@ void updateServos();
 
 
 /*
-    Moves every servo to its individually configured home angle.
+    Moves every servo to its individually configured home angle
 */
 void homeServos();
 
 
 /*
-    Returns a read-only reference to a joint's stored data.
+    Returns true if the requested angle lies inside the configured safe range for the selected servo
+*/
+bool isServoAngleValid(ServoId servoId, float requestedAngle);
+
+/*
+    Returns a read-only reference to a joint's stored data
 
     const prevents code outside this module from accidentally changing
-    the calibration or current-angle data directly.
+    the calibration or current-angle data directly
 */
 const ServoJoint& getServoJoint(ServoId servoId);

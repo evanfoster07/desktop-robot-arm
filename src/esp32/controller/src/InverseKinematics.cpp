@@ -33,7 +33,7 @@ bool InverseKinematics::solve(const CartesianPose& target, JointAngles& solution
     const float shoulderToWristSquared = wristRadial * wristRadial + wristVert * wristVert;
 
     /*
-        Calculate elbow angle with cosine law
+        Calculate elbow angle with law of cosines (+ clockwise, 0° = straight forearm relative to upper arm)
 
         Rearranged eq: 
             cos(elbow) = (shoulderToWrist^2 - upperArm^2 - forearm^2) / (2 * upperArm * forearm)
@@ -62,7 +62,7 @@ bool InverseKinematics::solve(const CartesianPose& target, JointAngles& solution
 
 
     /*
-        Calculate shoulder angle:
+        Calculate shoulder angle (0° when horizontal along +x axis)
         
         Made of two angles:
             - targetDirection: angle from shoulder directly towards wrist
@@ -77,7 +77,7 @@ bool InverseKinematics::solve(const CartesianPose& target, JointAngles& solution
     const float shoulderRads = targetDirection - elbowOffset;
 
     /*
-        Caculate wrist-pitch jount angle
+        Calculate wrist-pitch joint angle (+ clockwise, 0° = straight wrist relative to forearm)
 
         wristPitch = gripper target - shoulder - elbow
     */

@@ -4,6 +4,7 @@
 #include "InverseKinematics.h"
 #include "KinematicsData.h"
 #include "ServoController.h"
+#include "JointMapper.h"
 
 /*
     Coordinates the robot arm's major subsystems.
@@ -14,7 +15,13 @@
 class RobotArmControl
 {
 public:
-    explicit RobotArmControl(const ArmGeometry& geometry);
+    explicit RobotArmControl(
+        const ArmGeometry& geometry,
+        const JointCalibration& shoulderCalibration,
+        const JointCalibration& elbowCalibration,
+        const JointCalibration& wristPitchCalibration,
+        float baseStepsPerDegee
+    );
 
     /*
         Initializes the servo and stepper hardware.
@@ -70,7 +77,44 @@ public:
     */
     CartesianPose solveForwardKinematics(const JointAngles& joints) const;
 
+    /*
+        Reads the current physical actuator positions and converts them
+        back into mathematical robot-joint angles.
+    */
+    JointAngles getCurrentJointAngles() const;
+
+    /*
+        Calculates the current Cartesian pose from the tracked actuator
+        positions. This performs actuator -> mathematical joint mapping
+        before running forward kinematics.
+    */
+    CartesianPose getCurrentPose() const;
+
+    /*
+        Solves inverse kinematics and maps the mathematical joint angles into actuator targets
+    */
+    bool calculateActuatorTargets(const CartesianPose& target, ActuatorTargets& actuatorTargets) const;
+
+
+    /*
+        Prints mathematical joint angles and their mapped actuator targets
+
+        Used for calibration and verification before enabling actuator commands
+    */
+    bool printMappedPose(const CartesianPose& target) const;
+
+
+    /*
+    Moves the robot arm to a Cartesian target pose
+
+    Returns false if inverse kinematics cannot find a solution
+
+    The pose is first converted into mathematical joint angles, then mapped into physical stepper and servo targets
+    */
+    bool moveToPose(const CartesianPose& target);
+
 private:
     ForwardKinematics forwardKinematics;
     InverseKinematics inverseKinematics;
+    JointMapper jointMapper;
 };

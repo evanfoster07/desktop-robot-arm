@@ -152,3 +152,10 @@ const ServoJoint& getServoJoint(ServoId servoId) {
 
     return servos[servoIndex(servoId)];
 }
+
+bool isServoAngleValid(ServoId servoId, float requestedAngle)
+{
+    const ServoJoint& servo = servos[servoIndex(servoId)];
+    
+    return requestedAngle >= servo.minAngle && requestedAngle <= servo.maxAngle;
+}

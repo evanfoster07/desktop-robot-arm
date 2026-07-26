@@ -47,3 +47,42 @@ struct CartesianPose
     float pitch;
     float roll;
 };
+
+
+/*
+    Describes how one mathematical robot joint maps to its actuator
+
+    mathReferenceAngle:
+        A known mathematical joint angle
+
+    actuatorReferenceAngle:
+        The raw actuator angle that produces that mathematical angle
+
+    direction:
+        +1 if increasing the mathematical angle increases the actuator angle
+        -1 if increasing the mathematical angle decreases the actuator angle
+*/
+struct JointCalibration
+{
+    float mathReferenceAngle;
+    float actuatorReferenceAngle;
+    float direction;
+};
+
+
+/*
+    Stores the raw actuator commands produced by the joint mapper
+
+    These are not mathematical robot-joint angles
+
+    The servo values are raw angles that can be passed to ServoController
+    The base value is the target stepper position in steps
+*/
+struct ActuatorTargets
+{
+    long baseSteps;
+
+    float shoulderServoAngle;
+    float elbowServoAngle;
+    float wristPitchServoAngle;
+};

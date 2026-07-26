@@ -3,6 +3,7 @@
 #include <Arduino.h>
 
 #include "RobotArmControl.h"
+#include "Poses.h"
 
 namespace {
 
@@ -39,6 +40,51 @@ namespace {
         if (command == "position") {
             Serial.print("Base position: ");
             Serial.println(robotArm->getBasePosition());
+            return;
+        }
+
+        if (command == "fk") {
+            /*
+                Read the tracked physical actuator angles, reverse-map
+                them into mathematical joint angles, and then run FK.
+            */
+            const JointAngles joints = robotArm->getCurrentJointAngles();
+            const CartesianPose pose = robotArm->getCurrentPose();
+
+            Serial.println();
+            Serial.println("Current mathematical joint angles:");
+
+            Serial.print("Base: ");
+            Serial.println(joints.base);
+
+            Serial.print("Shoulder: ");
+            Serial.println(joints.shoulder);
+
+            Serial.print("Elbow: ");
+            Serial.println(joints.elbow);
+
+            Serial.print("Wrist pitch: ");
+            Serial.println(joints.wristPitch);
+
+            Serial.println();
+            Serial.println("Current Cartesian pose:");
+
+            Serial.print("x: ");
+            Serial.println(pose.x);
+
+            Serial.print("y: ");
+            Serial.println(pose.y);
+
+            Serial.print("z: ");
+            Serial.println(pose.z);
+
+            Serial.print("pitch: ");
+            Serial.println(pose.pitch);
+
+            Serial.print("roll: ");
+            Serial.println(pose.roll);
+
+            Serial.println();
             return;
         }
 
@@ -96,7 +142,15 @@ namespace {
             robotArm->moveBase(value);
         }
 
+        // Preset position commands
+        else if (command == "pose") {
+            if (value < 0 || static_cast<size_t>(value) >= POSE_COUNT) {
+                Serial.println("Invalid pose index");
+                return;
+            }
 
+            robotArm->moveToPose(POSES[value]);
+        }
         
         // Comm test
         else if (command == "hi") {

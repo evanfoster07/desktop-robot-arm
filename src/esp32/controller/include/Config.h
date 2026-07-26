@@ -51,3 +51,29 @@ namespace KinematicsConfig {
         120.0f      // Wrist pitch to gripper reference
     };
 }
+
+namespace JointMappingConfig
+{
+    constexpr JointCalibration SHOULDER_CALIBRATION
+    {
+        90.0f,   // Mathematical reference angle
+        90.0f,   // Servo angle at reference
+        1.0f     // Direction
+    };
+
+    constexpr JointCalibration ELBOW_CALIBRATION
+    {
+        0.0f,
+        90.0f,
+        1.0f
+    };
+
+    constexpr JointCalibration WRIST_PITCH_CALIBRATION
+    {
+        0.0f,
+        90.0f,
+        1.0f
+    };
+
+    constexpr float BASE_STEPS_PER_DEGREE = 1600.0f / 360.0f;   // Total steps per rev / 360 deg
+}
