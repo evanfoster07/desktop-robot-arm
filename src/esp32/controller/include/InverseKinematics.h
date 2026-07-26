@@ -26,7 +26,11 @@ public:
             true = target can be reached 
             false = target cannot be reached
     */
-    bool solve(const CartesianPose& target, JointAngles& solution) const;
+    bool solve(
+        const CartesianPose& target,
+        JointAngles& solution,
+        bool preferElbowPositive = true
+    ) const;
 
 
 private:

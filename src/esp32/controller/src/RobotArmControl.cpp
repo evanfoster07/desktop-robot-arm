@@ -64,7 +64,44 @@ long RobotArmControl::getBasePosition() const
 
 bool RobotArmControl::solveInverseKinematics(const CartesianPose& target, JointAngles& solution) const
 {
-    return inverseKinematics.solve(target, solution);
+    JointAngles positiveBranch;
+    JointAngles negativeBranch;
+
+    const bool positiveReachable = inverseKinematics.solve(target, positiveBranch, true);
+    const bool negativeReachable = inverseKinematics.solve(target, negativeBranch, false);
+
+    if (!positiveReachable && !negativeReachable)
+    {
+        return false;
+    }
+
+    if (positiveReachable && !negativeReachable)
+    {
+        solution = positiveBranch;
+        return true;
+    }
+
+    if (!positiveReachable && negativeReachable)
+    {
+        solution = negativeBranch;
+        return true;
+    }
+
+    const JointAngles referenceJoints = getCurrentJointAngles();
+
+    const float positiveScore =
+        (positiveBranch.shoulder - referenceJoints.shoulder) * (positiveBranch.shoulder - referenceJoints.shoulder) +
+        (positiveBranch.elbow - referenceJoints.elbow) * (positiveBranch.elbow - referenceJoints.elbow) +
+        (positiveBranch.wristPitch - referenceJoints.wristPitch) * (positiveBranch.wristPitch - referenceJoints.wristPitch);
+
+    const float negativeScore =
+        (negativeBranch.shoulder - referenceJoints.shoulder) * (negativeBranch.shoulder - referenceJoints.shoulder) +
+        (negativeBranch.elbow - referenceJoints.elbow) * (negativeBranch.elbow - referenceJoints.elbow) +
+        (negativeBranch.wristPitch - referenceJoints.wristPitch) * (negativeBranch.wristPitch - referenceJoints.wristPitch);
+
+    solution = (positiveScore <= negativeScore) ? positiveBranch : negativeBranch;
+
+    return true;
 }
 
 CartesianPose RobotArmControl::solveForwardKinematics(const JointAngles& joints) const
@@ -114,35 +151,87 @@ CartesianPose RobotArmControl::getCurrentPose() const
 
 bool RobotArmControl::calculateActuatorTargets(const CartesianPose& target, ActuatorTargets& actuatorTargets) const 
 {
+    const JointAngles referenceJoints = getCurrentJointAngles();
     JointAngles jointAngles;
 
-    // First convert the cartesian target into mathematical robot joint angles
-    const bool reachable = inverseKinematics.solve(target, jointAngles);
+    return calculateBestActuatorTargets(target, referenceJoints, jointAngles, actuatorTargets);
+}
 
-    // Return false if pose is geometrically unreachable
-    if(!reachable) 
+
+bool RobotArmControl::calculateActuatorTargets(
+    const CartesianPose& target,
+    const JointAngles& referenceJoints,
+    JointAngles& solution,
+    ActuatorTargets& actuatorTargets
+) const
+{
+    return calculateBestActuatorTargets(target, referenceJoints, solution, actuatorTargets);
+}
+
+
+bool RobotArmControl::calculateBestActuatorTargets(
+    const CartesianPose& target,
+    const JointAngles& referenceJoints,
+    JointAngles& solution,
+    ActuatorTargets& actuatorTargets
+) const
+{
+    JointAngles positiveBranch;
+    JointAngles negativeBranch;
+    ActuatorTargets positiveTargets;
+    ActuatorTargets negativeTargets;
+
+    const bool positiveReachable = inverseKinematics.solve(target, positiveBranch, true);
+    const bool negativeReachable = inverseKinematics.solve(target, negativeBranch, false);
+
+    if (!positiveReachable && !negativeReachable)
     {
         return false;
     }
 
-    // Will return true if mapped mathematical solution is within servo limits
-    return jointMapper.map(jointAngles, actuatorTargets);
+    const bool positiveValid = positiveReachable && jointMapper.map(positiveBranch, positiveTargets);
+    const bool negativeValid = negativeReachable && jointMapper.map(negativeBranch, negativeTargets);
+
+    if (!positiveValid && !negativeValid)
+    {
+        return false;
+    }
+
+    // Compare 'score' of each branch for best option
+    const float positiveScore =
+        (positiveBranch.shoulder - referenceJoints.shoulder) * (positiveBranch.shoulder - referenceJoints.shoulder) +
+        (positiveBranch.elbow - referenceJoints.elbow) * (positiveBranch.elbow - referenceJoints.elbow) +
+        (positiveBranch.wristPitch - referenceJoints.wristPitch) * (positiveBranch.wristPitch - referenceJoints.wristPitch);
+
+    const float negativeScore =
+        (negativeBranch.shoulder - referenceJoints.shoulder) * (negativeBranch.shoulder - referenceJoints.shoulder) +
+        (negativeBranch.elbow - referenceJoints.elbow) * (negativeBranch.elbow - referenceJoints.elbow) +
+        (negativeBranch.wristPitch - referenceJoints.wristPitch) * (negativeBranch.wristPitch - referenceJoints.wristPitch);
+
+    if (positiveValid && (!negativeValid || positiveScore <= negativeScore))
+    {
+        solution = positiveBranch;
+        actuatorTargets = positiveTargets;
+        return true;
+    }
+
+    solution = negativeBranch;
+    actuatorTargets = negativeTargets;
+    return true;
 }
 
 
 bool RobotArmControl::printMappedPose(const CartesianPose& target) const
 {
+    const JointAngles referenceJoints = getCurrentJointAngles();
     JointAngles jointAngles;
-    
-    const bool reachable = inverseKinematics.solve(target, jointAngles);
+    ActuatorTargets actuatorTargets;
 
-    if (!reachable) 
+    if (!calculateBestActuatorTargets(target, referenceJoints, jointAngles, actuatorTargets))
     {
         Serial.println("Target unreachable.");
         return false;
     }
-    ActuatorTargets actuatorTargets;
-    const bool actuatorTargetsValid = jointMapper.map(jointAngles, actuatorTargets);
 
     Serial.println();
     Serial.println("Mathematical joint angles:");
@@ -178,34 +267,24 @@ bool RobotArmControl::printMappedPose(const CartesianPose& target) const
     Serial.println();
 
     Serial.print("Physical pose valid: "); 
-    Serial.println(actuatorTargetsValid ? "yes": "no");
+    Serial.println("yes");
 
     Serial.println();
 
-    return actuatorTargetsValid;
+    return true;
 }
 
 
 bool RobotArmControl::moveToPose(const CartesianPose& target)
 {
+    const JointAngles referenceJoints = getCurrentJointAngles();
     JointAngles joints;
-
-    if (!inverseKinematics.solve(target, joints))
-    {
-        Serial.println("Target unreachable.");
-        return false;
-    }
-
     ActuatorTargets targets;
 
-    /*
-        Convert to physical actuator commands and verify that every
-        mapped servo angle lies inside its safe configured range
-    */
-    if (!jointMapper.map(joints, targets))
+    // Do not move if both pos & neg targets are unreachable 
+    if (!calculateBestActuatorTargets(target, referenceJoints, joints, targets))
     {
-        Serial.println("Target is geometrically reachable, but exceeds safe servo limits.");
-
+        Serial.println("Target unreachable.");
         return false;
     }
 

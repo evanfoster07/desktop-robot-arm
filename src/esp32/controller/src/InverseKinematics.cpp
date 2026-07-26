@@ -15,7 +15,11 @@ namespace
 
 InverseKinematics::InverseKinematics(const ArmGeometry& geometry) : geometry(geometry) {}
 
-bool InverseKinematics::solve(const CartesianPose& target, JointAngles& solution) const
+bool InverseKinematics::solve(
+    const CartesianPose& target,
+    JointAngles& solution,
+    bool preferElbowPositive
+) const
 {
     // Convert desired gripper pitch to radians
     // Represents absolute angle of gripper relative to horizontal plane
@@ -58,7 +62,7 @@ bool InverseKinematics::solve(const CartesianPose& target, JointAngles& solution
 
     // Clamp floating-point errors before calling acos()
     cosElbow = constrain(cosElbow, -1.0f, 1.0f);
-    const float elbowRads = std::acos(cosElbow);
+    const float elbowMagnitudeRads = std::acos(cosElbow);
 
 
     /*
@@ -70,11 +74,19 @@ bool InverseKinematics::solve(const CartesianPose& target, JointAngles& solution
 
         shoulder = targetDirection - elbowOffset
     */
-   const float targetDirection = std::atan2(wristVert, wristRadial);
-   const float elbowOffset = std::atan2(geometry.forearmLength * std::sin(elbowRads), 
-        geometry.upperArmLength + geometry.forearmLength*std::cos(elbowRads));
+    const float targetDirection = std::atan2(wristVert, wristRadial);
+    const float elbowOffset = std::atan2(
+        geometry.forearmLength * std::sin(elbowMagnitudeRads),
+        geometry.upperArmLength + geometry.forearmLength * std::cos(elbowMagnitudeRads)
+    );
 
-    const float shoulderRads = targetDirection - elbowOffset;
+    const float elbowRads = preferElbowPositive
+        ? elbowMagnitudeRads
+        : -elbowMagnitudeRads;
+
+    const float shoulderRads = preferElbowPositive
+        ? targetDirection - elbowOffset
+        : targetDirection + elbowOffset;
 
     /*
         Calculate wrist-pitch joint angle (+ clockwise, 0° = straight wrist relative to forearm)

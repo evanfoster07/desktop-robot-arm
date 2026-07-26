@@ -97,6 +97,18 @@ public:
 
 
     /*
+        Solves both IK branches and keeps the safe solution closest to the
+        reference joint state.
+    */
+    bool calculateActuatorTargets(
+        const CartesianPose& target,
+        const JointAngles& referenceJoints,
+        JointAngles& solution,
+        ActuatorTargets& actuatorTargets
+    ) const;
+
+
+    /*
         Prints mathematical joint angles and their mapped actuator targets
 
         Used for calibration and verification before enabling actuator commands
@@ -117,4 +129,11 @@ private:
     ForwardKinematics forwardKinematics;
     InverseKinematics inverseKinematics;
     JointMapper jointMapper;
+
+    bool calculateBestActuatorTargets(
+        const CartesianPose& target,
+        const JointAngles& referenceJoints,
+        JointAngles& solution,
+        ActuatorTargets& actuatorTargets
+    ) const;
 };
