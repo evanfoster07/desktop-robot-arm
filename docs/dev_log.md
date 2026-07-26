@@ -188,3 +188,10 @@
 
 - Next: 
     - Verify kinematics calculations & test if tolerance fixes pose issue
+
+## July 26 2026
+- Traced FK/IK calculations and realized cartestian pose command issue was caused because only the positive IK elbow anlge branch is considered
+    - Fixed by adding a negative branch calculation in IK, and selecting branch in calculateBestActuatorTargets() most similar to current arm pose
+
+- Next:
+    - Test commands for all predefined grab poses in cartesian form
