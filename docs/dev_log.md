@@ -190,8 +190,20 @@
     - Verify kinematics calculations & test if tolerance fixes pose issue
 
 ## July 26 2026
-- Traced FK/IK calculations and realized cartestian pose command issue was caused because only the positive IK elbow anlge branch is considered
+- Traced FK/IK calculations and realized cartestian pose command issue was caused because only the positive IK elbow angle branch is considered
     - Fixed by adding a negative branch calculation in IK, and selecting branch in calculateBestActuatorTargets() most similar to current arm pose
 
 - Next:
     - Test commands for all predefined grab poses in cartesian form
+
+## July 27 2026
+- Tested and verified function for all grab pose commands in cartesian form
+- Carried out test pick-and-place tasks with various objects and pre-defined cartesian poses
+
+- Next:
+    - Learn about integrating a Raspberry Pi 5 + camera for object recognition
+    - Script short demo video for current state of project, showcasing:
+        - FK/IK
+        - Pick-and-place tasks
+        - Dev process so far
+        - Kinematics math
