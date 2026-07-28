@@ -207,3 +207,7 @@
         - Pick-and-place tasks
         - Dev process so far
         - Kinematics math
+
+## July 28 2026
+- Issue: Found that UART TX/RX pins were connected to the wrong TMC2209 pin, meaning UART configuration was not being applied
+    - Fix: re-solder ESP32 -> TMC2209 UART wires onto proper pins
