@@ -15,11 +15,7 @@ namespace
 
 InverseKinematics::InverseKinematics(const ArmGeometry& geometry) : geometry(geometry) {}
 
-bool InverseKinematics::solve(
-    const CartesianPose& target,
-    JointAngles& solution,
-    bool preferElbowPositive
-) const
+bool InverseKinematics::solve(const CartesianPose& target, JointAngles& solution, bool preferElbowPositive) const
 {
     // Convert desired gripper pitch to radians
     // Represents absolute angle of gripper relative to horizontal plane

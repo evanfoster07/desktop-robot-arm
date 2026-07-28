@@ -20,7 +20,7 @@ constexpr CartesianPose POSES[]
     },
 
 
-    // Grab Pose 1
+    // Grab Pose 1 (Pickup, ground)
     {
         113.31f,
         196.86f,
@@ -29,26 +29,32 @@ constexpr CartesianPose POSES[]
         90.0f
     },
 
-    // Grab Pose 2
+    // Grab Pose 2 (Intermediate, rotate to pose 3)
     {
-        1.79f,
-        3.10f,
+        -2.18f,
+        2.84f,
         278.76f,
         15.00f,
         90.0f
     },
 
-    // Grab Pose 3
+    // Grab Pose 3 (Destination, ground)
     {
-        1.79f,
-        3.10f,
-        278.76f,
-        15.00f,
+        -97.09f,
+        126.19f,
+        48.83f,
+        -95.00f,
         90.0f
     },
 
-    
-
+    // Grab pose 4 (Destination, PSU Height)
+    {
+        -185.27f,
+        189.68f,
+        229.10f,
+        5.00f,
+        90.0f
+    }
 };
 
 constexpr size_t POSE_COUNT = sizeof(POSES) / sizeof(POSES[0]);
