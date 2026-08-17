@@ -221,3 +221,12 @@
 
 - Issue: NEMA17 coupler slips under arm load approximately 22° 
     - Fix: tighten coupling shaft tolerance and re-print part
+
+## August 17 2026
+- Tightened CAD tolerance for NEMA17 -> base coupler, then re-printed and attached finished part
+- Designed, printed and attached Raspberry pi camera mount + module to arm
+
+- Issue: tested new motor hub, however slip is still present for ~4° of rotation 
+    - Fix: re-design hub with tapered D-bore to minimize slip
+
+- Next: print and attach new NEMA17 hub and begin planning CV implementation with Raspberry pi 
