@@ -211,3 +211,13 @@
 ## July 28 2026
 - Issue: Found that UART TX/RX pins were connected to the wrong TMC2209 pin, meaning UART configuration was not being applied
     - Fix: re-solder ESP32 -> TMC2209 UART wires onto proper pins
+
+## === BREAK (trip) ===
+
+
+## August 16 2026
+- Fixed UART RX/TX pin connection issue and verified UART communication
+- Tested various microstepping and RMS current settings as well as driver modes
+
+- Issue: NEMA17 coupler slips under arm load approximately 22° 
+    - Fix: tighten coupling shaft tolerance and re-print part
