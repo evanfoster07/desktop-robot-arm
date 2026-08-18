@@ -219,7 +219,7 @@
 - Fixed UART RX/TX pin connection issue and verified UART communication
 - Tested various microstepping and RMS current settings as well as driver modes
 
-- Issue: NEMA17 coupler slips under arm load approximately 22° 
+- Issue: NEMA17 coupler slips under arm load approximately 22° (200 microsteps = approx 22°)
     - Fix: tighten coupling shaft tolerance and re-print part
 
 ## August 17 2026
@@ -229,4 +229,13 @@
 - Issue: tested new motor hub, however slip is still present for ~4° of rotation 
     - Fix: re-design hub with tapered D-bore to minimize slip
 
-- Next: print and attach new NEMA17 hub and begin planning CV implementation with Raspberry pi 
+- Next: print and attach new NEMA17 hub and begin planning CV implementation with R+aspberry pi 
+
+## August 18 2026
+- Re-designed, then printed and attached NEMA17 motor hub with internal tapered D-bore and external taper for tighter base-platform coupling
+    - Reduced overall slip to ~0.2° from ~22° after testing (2 microsteps slip = approx 0.2°)
+- Configured and tested Raspberry pi SSH for CV development
+
+- Next:
+    - Begin CV development on Pi
+    - Establish Pi -> ESP32 communication via Serial USB connection
