@@ -17,3 +17,7 @@
 
 # Windows
 Thumbs.db
+
+# Raspberry Pi
+.venv/
+__pycache__/
