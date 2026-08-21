@@ -239,3 +239,13 @@
 - Next:
     - Begin CV development on Pi
     - Establish Pi -> ESP32 communication via Serial USB connection
+
+## August 20 2026
+- Began CV testing with OpenCV ORB feature detection
+    - Successfully detected and matched features between reference and scene images
+    - Homography-based object localization was unreliable, particularly with changes in viewing angle
+    - Decided to move toward CNN-based object detection using transfer learning
+    
+- Next:
+    - Begin planning CNN code architecture
+    - Obtain & label training images from robot perspective before camera extension arrives
