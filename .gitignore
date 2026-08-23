@@ -21,3 +21,6 @@ Thumbs.db
 # Raspberry Pi
 .venv/
 __pycache__/
+
+# Ultralytics YOLO
+*.cache
