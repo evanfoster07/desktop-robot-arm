@@ -249,3 +249,15 @@
 - Next:
     - Begin planning CNN code architecture
     - Obtain & label training images from robot perspective before camera extension arrives
+
+## August 22 2026
+- Began YOLO object detection implementation
+    - Installed Ultralytics YOLO and PyTorch on Raspberry Pi
+    - Loaded pretrained YOLO26n model
+    - Integrated OpenCV image loading with YOLO inference
+    - Successfully detected objects from test images
+        - Tested detection on target creeper keychain object
+
+- Next:
+    - Create custom creeper keychain dataset
+    - Label training images with bounding boxes
