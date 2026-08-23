@@ -22,6 +22,13 @@ Thumbs.db
 .venv/
 __pycache__/
 
-# Ultralytics YOLO
-runs/
+# YOLO dataset data
+dataset/images/
+dataset/images_raw/
+dataset/labels/
+dataset/testing/
+dataset/*.ndjson
+
+# Training outputs
+src/vision/runs/
 *.cache
