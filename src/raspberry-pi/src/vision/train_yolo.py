@@ -6,6 +6,6 @@ model.train(
     data="dataset/data.yaml",
     epochs=20,
     imgsz=640,
-    project="src/vision/runs/detect"
+    project="src/vision/runs/detect",
     name="creeper"
 )
