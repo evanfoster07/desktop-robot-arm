@@ -23,4 +23,5 @@ Thumbs.db
 __pycache__/
 
 # Ultralytics YOLO
+runs/
 *.cache
