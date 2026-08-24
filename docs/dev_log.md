@@ -261,3 +261,16 @@
 - Next:
     - Create custom creeper keychain dataset
     - Label training images with bounding boxes
+
+## August 23 2026
+- Implemented custom YOLO object detection pipeline
+    - Created and annotated creeper dataset
+    - Created Python script to convert Ultralytics NDJSON annotations to YOLO train/val format
+    - Tested fine-tuning of pretrained YOLO26n model on Raspberry Pi
+    - Evaluated model using precision, recall, mAP, and loss
+    - Initial model showed poor generalization due to very limited training data
+
+- Next:
+    - Expand dataset
+    - Train same dataset on laptop with frozen early layers to compare performance
+    - Integrate Pi camera with OpenCV inference
