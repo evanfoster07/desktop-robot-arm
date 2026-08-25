@@ -274,3 +274,13 @@
     - Expand dataset
     - Train same dataset on laptop with frozen early layers to compare performance
     - Integrate Pi camera with OpenCV inference
+
+## August 24 2026
+- Moved YOLO training from Raspberry Pi to laptop for significantly faster training
+- Retrained test creeper detection model on laptop for 20 epochs
+- Tested trained model on new images and training set images
+    - For new images: extremely low confidence, excessive detections
+    - Training set images: higher but still low confidence, more reliable detections
+- Next:
+    - Continue collecting diverse training images with Raspberry Pi camera
+    - Improve dataset/model performance before deploying inference to Raspberry Pi
