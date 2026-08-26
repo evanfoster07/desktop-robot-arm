@@ -19,7 +19,10 @@ with open(ndjson_path, "r") as file:
         # Retrieve name, split and box data
         image_name = data["file"]
         split = data["split"]
-        boxes = data["annotations"]["boxes"]
+
+        # Images with no Creeper may have no annotations
+        annotations = data.get("annotations") or {}
+        boxes = annotations.get("boxes", [])
 
         # Copy images to test/val sets
         image_dir = images_root / split
