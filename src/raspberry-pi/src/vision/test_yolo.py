@@ -1,9 +1,9 @@
 import cv2
 from ultralytics import YOLO
 
-model = YOLO("src/vision/runs/detect/creeper-3/weights/best.pt")
+model = YOLO("src/vision/runs/detect/creeper/weights/best.pt")
 
-image = cv2.imread("dataset/images/train/creeper11.jpg")
+image = cv2.imread("dataset/images/val/creeper_011.jpg")
 
 if image is None:
     print("Failed to load image")
