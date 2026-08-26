@@ -281,6 +281,19 @@
 - Tested trained model on new images and training set images
     - For new images: extremely low confidence, excessive detections
     - Training set images: higher but still low confidence, more reliable detections
+    
 - Next:
     - Continue collecting diverse training images with Raspberry Pi camera
     - Improve dataset/model performance before deploying inference to Raspberry Pi
+
+## August 25 2026
+- Integrated IMX219 eye-in-hand camera with Raspberry Pi 5
+    - Connected camera using extended CSI ribbon cable setup for arm mobility
+    - Diagnosed camera detection and ribbon connection issues
+    - Configured IMX219 device tree overlay for camera detection
+- Verified camera is successfully detected by Raspberry Pi
+
+- Next:
+    - Develop automated image capture and naming script
+    - Collect robot-perspective images for YOLO dataset
+    - Label images and retrain object detection model
