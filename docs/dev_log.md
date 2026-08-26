@@ -297,3 +297,15 @@
     - Develop automated image capture and naming script
     - Collect robot-perspective images for YOLO dataset
     - Label images and retrain object detection model
+
+## August 26 2026
+- Expanded Creeper detection dataset to 243 robot-camera images
+- Updated NDJSON conversion script to support negative/background images with no annotations
+- Retrained YOLO model using transfer learning on laptop
+    - Achieved ~0.96 mAP50 and ~0.90 mAP50-95 on validation set
+    - Successfully detected Creeper in various robot-camera images
+- Added Raspberry Pi camera dataset capture script
+- Next:
+    - Deploy new `best.pt` model to Raspberry Pi to test camera inference
+    - Collect and label images of second `goal` object class
+    - Retrain as two-class Creeper/goal detector
