@@ -305,7 +305,21 @@
     - Achieved ~0.96 mAP50 and ~0.90 mAP50-95 on validation set
     - Successfully detected Creeper in various robot-camera images
 - Added Raspberry Pi camera dataset capture script
+
 - Next:
     - Deploy new `best.pt` model to Raspberry Pi to test camera inference
     - Collect and label images of second `goal` object class
     - Retrain as two-class Creeper/goal detector
+
+## August 27 2026
+- Implemented live Raspberry Pi camera streaming to browser
+- Implemented real-time YOLO inference on live robot camera feed
+    - Streams annotated detections with bounding boxes and confidence
+    - Extracts bounding box coordinates and target center for future control
+    - Achieved reliable Creeper detection
+- Designed and printed 100 x 100 mm goal tray for autonomous pick-and-place
+
+- Next:
+    - Capture and label goal object dataset
+    - Retrain YOLO with Creeper and goal classes
+    - Begin integrating vision detections with robot control
