@@ -1,0 +1,135 @@
+from flask import Flask, Response
+from picamera2 import Picamera2
+from libcamera import Transform
+from ultralytics import YOLO
+import cv2
+
+app = Flask(__name__)
+
+# Load trained YOLO model once when script starts
+model = YOLO("src/vision/runs/detect/creeper/weights/best.pt")
+
+# Create camera once
+picam2 = Picamera2()
+
+config = picam2.create_video_configuration(
+    main={"size": (1280, 720)},
+    raw={"size": picam2.sensor_resolution},
+    transform=Transform(hflip=1, vflip=1)
+)
+
+picam2.configure(config)
+picam2.start()
+
+
+def run_inference(frame):
+    """
+    Runs YOLO inference on one frame
+
+    Return:
+        annotated_frame:
+            Original camera frame with YOLO boxes/labels drawn on it
+
+        detections:
+            List containing useful information for each detection
+    """
+
+    # Run YOLO
+    results = model(
+        frame,
+        imgsz=640,
+        verbose=False
+    )
+
+    # Only passed one image, so take the first result
+    result = results[0]
+
+    detections = []
+
+    # Each detected object has one bounding box
+    for box in result.boxes:
+
+        # xyxy format:
+        # [left, top, right, bottom]
+        x1, y1, x2, y2 = box.xyxy[0].tolist()
+
+        confidence = float(box.conf[0])
+        class_id = int(box.cls[0])
+
+        # Calculate center of bounding box
+        cx = (x1 + x2) / 2
+        cy = (y1 + y2) / 2
+
+        detections.append({
+            "class_id": class_id,
+            "confidence": confidence,
+            "box": [x1, y1, x2, y2],
+            "center": [cx, cy]
+        })
+
+    # Draw YOLO boxes and labels onto the frame
+    annotated_frame = result.plot()
+
+    return annotated_frame, detections
+
+
+def generate_frames():
+    while True:
+
+        # Capture full-FOV camera frame
+        frame = picam2.capture_array()
+
+        # Picamera2 gives RGB
+        # OpenCV / YOLO plotting works with BGR here
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+
+        # Run object detection
+        annotated_frame, detections = run_inference(frame)
+
+        # Temporary debugging
+        if detections:
+            print(detections)
+
+        # Encode annotated image as JPEG for browser streaming
+        success, buffer = cv2.imencode(".jpg", annotated_frame)
+
+        if not success:
+            continue
+
+        frame_bytes = buffer.tobytes()
+
+        # Send one MJPEG frame to the browser
+        yield (
+            b"--frame\r\n"
+            b"Content-Type: image/jpeg\r\n\r\n"
+            + frame_bytes
+            + b"\r\n"
+        )
+
+
+@app.route("/")
+def index():
+    return """
+    <html>
+        <body>
+            <h1>Robot Arm YOLO Inference</h1>
+            <img src="/video_feed">
+        </body>
+    </html>
+    """
+
+
+@app.route("/video_feed")
+def video_feed():
+    return Response(
+        generate_frames(),
+        mimetype="multipart/x-mixed-replace; boundary=frame"
+    )
+
+
+if __name__ == "__main__":
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=False
+    )
