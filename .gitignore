@@ -23,11 +23,11 @@ Thumbs.db
 __pycache__/
 
 # YOLO dataset data
-dataset/images/
-dataset/images_raw/
-dataset/labels/
-dataset/testing/
-dataset/*.ndjson
+src/raspberry-pi/dataset/images/
+src/raspberry-pi/dataset/images_raw/
+src/raspberry-pi/dataset/labels/
+src/raspberry-pi/dataset/testing/
+src/raspberry-pi/dataset/*.ndjson
 
 # Training outputs
 src/vision/runs/
