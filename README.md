@@ -171,13 +171,13 @@ This part of the project is currently in development.
 
 ## Software
 
-* **C++** — ESP32 firmware and arm control
-* **Python** — computer vision, dataset tools, and inference
-* **Fusion 360** — mechanical design
-* **OpenCV** — image processing and early CV experiments
-* **Ultralytics YOLO** — object detection
-* **AccelStepper / TMCStepper** — stepper control
-* **Adafruit PCA9685** — servo control
+* **C++** - ESP32 firmware and arm control
+* **Python** - computer vision, dataset tools, and inference
+* **Fusion 360** - mechanical design
+* **OpenCV** - image processing and early CV experiments
+* **Ultralytics YOLO** - object detection
+* **AccelStepper / TMCStepper** - stepper control
+* **Adafruit PCA9685** - servo control
 
 ## Development Process
 
