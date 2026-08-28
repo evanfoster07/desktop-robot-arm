@@ -4,9 +4,9 @@
 
 A 3D-printed desktop robot arm built from scratch, integrating robotics, embedded control, kinematics, and computer vision.
 
-The arm is controlled by an **ESP32** and uses a **Raspberry Pi 5 with an eye-in-hand camera** for computer vision. Motion control, forward/inverse kinematics, and a custom-trained YOLO object detection model are currently working, with the end goal of autonomous vision-guided pick and place.
+The arm is controlled by an ESP32 and uses a Raspberry Pi 5 with an eye-in-hand camera for computer vision. Motion control, forward/inverse kinematics, and a custom-trained YOLO object detection model are currently working, with the end goal of autonomous vision-guided pick and place.
 
-> **Current status:** Object detection and arm control are working independently. I'm currently working on connecting the vision and control systems for autonomous manipulation.
+> Current status: Object detection and arm control are working independently. I'm currently working on connecting the vision and control systems for autonomous manipulation.
 
 ## Demo
 
@@ -51,7 +51,7 @@ The arm is controlled by an **ESP32** and uses a **Raspberry Pi 5 with an eye-in
 
 ## Mechanical Design
 
-The arm was designed from scratch in **Fusion 360** and went through a few iterations as I built and tested it.
+The arm was designed from scratch in Fusion 360 and went through a few iterations as I built and tested it.
 
 The base is driven by a NEMA 17 stepper motor, while the shoulder, elbow, wrist, and gripper are servo-driven. The final arm has control over:
 
@@ -80,7 +80,7 @@ Custom components include:
 
 ## Electronics
 
-The electronics are split between the **ESP32 motion control system** and the **Raspberry Pi vision system**.
+The electronics are split between the ESP32 motion control system and the Raspberry Pi vision system.
 
 The ESP32 controls the servos through the PCA9685 over I²C and configures the TMC2209 stepper driver over UART.
 
@@ -105,7 +105,7 @@ The TMC2209 is configured through UART, allowing settings such as motor current 
 
 ## Control System
 
-The **Raspberry Pi** handles computer vision and higher-level decision making, while the **ESP32** handles the actual motion of the arm.
+The Raspberry Pi handles computer vision and higher-level decision making, while the ESP32 handles the actual motion of the arm.
 
 The ESP32 firmware handles:
 
@@ -128,15 +128,15 @@ Servo motion is also interpolated without blocking the main control loop, allowi
 
 ## Computer Vision
 
-Computer vision runs on the **Raspberry Pi 5** using an IMX219 camera mounted directly to the arm.
+Computer vision runs on the Raspberry Pi 5 using an IMX219 camera mounted directly to the arm.
 
 ![Camera Dataset Example](docs/images/camera-dataset-example.jpg)
 
 *Example training image captured from the arm's eye-in-hand camera.*
 
-I initially experimented with OpenCV ORB feature matching, but it wasn't reliable enough across different viewpoints. I then moved to a learned object detection approach using **Ultralytics YOLO**.
+I initially experimented with OpenCV ORB feature matching, but it wasn't reliable enough across different viewpoints. I then moved to a learned object detection approach using Ultralytics YOLO.
 
-The current model is trained on a custom dataset of approximately **500 images collected from the robot's own camera**.
+The current model is trained on a custom dataset of approximately 500 images collected from the robot's own camera.
 
 The training process includes:
 
@@ -171,13 +171,13 @@ This part of the project is currently in development.
 
 ## Software
 
-* **C++** - ESP32 firmware and arm control
-* **Python** - computer vision, dataset tools, and inference
-* **Fusion 360** - mechanical design
-* **OpenCV** - image processing and early CV experiments
-* **Ultralytics YOLO** - object detection
-* **AccelStepper / TMCStepper** - stepper control
-* **Adafruit PCA9685** - servo control
+* C++ - ESP32 firmware and arm control
+* Python - computer vision, dataset tools, and inference
+* Fusion 360 - mechanical design
+* OpenCV - image processing and early CV experiments
+* Ultralytics YOLO - object detection
+* AccelStepper / TMCStepper - stepper control
+* Adafruit PCA9685 - servo control
 
 ## Development Process
 
@@ -201,36 +201,36 @@ The project has been developed and tested incrementally:
 
 ## Challenges & Lessons Learned (so far)
 
-* **Mechanical repeatability:**
+* Mechanical repeatability:
 
   * Initial base coupling had significant rotational slip
   * Redesigned the coupling using a tapered D-bore and external taper
   * Added a custom wrist pitch bracket after identifying excessive movement around the servo mounting point
 
-* **Stepper control:**
+* Stepper control:
 
   * Configured the TMC2209 through UART
   * Tuned motor current, microstepping, speed, and acceleration
   * Debugged hardware and UART communication issues during integration
 
-* **Servo calibration:**
+* Servo calibration:
 
   * Individually calibrated servo pulse-width ranges
   * Added mappings between mathematical joint angles and physical servo positions
 
-* **Kinematics:**
+* Kinematics:
 
   * Developed forward and inverse kinematics based on the arm's geometry
   * Worked through joint coordinate systems, offsets, and end-effector orientation
   * Validated calculated poses against the physical arm
 
-* **Computer vision:**
+* Computer vision:
 
   * Found traditional feature matching unreliable with changing camera viewpoints
   * Moved to a learned object detection approach using transfer learning
   * Collected a custom dataset from the robot's actual operating perspective
 
-* **Camera integration:**
+* Camera integration:
 
   * Integrated the camera into the moving arm while accounting for cable routing and joint movement
   * Built the image capture workflow directly around the Raspberry Pi camera
@@ -239,7 +239,7 @@ The project has been developed and tested incrementally:
 
 * [x] Mechanical design and assembly
 * [x] Individual joint control
-* [x] Smooth multi-joint motion
+* [x] Multi-joint motion
 * [x] Stepper base control
 * [x] Forward kinematics
 * [x] Inverse kinematics
@@ -258,4 +258,4 @@ The project has been developed and tested incrementally:
 
 The main focus right now is getting the Raspberry Pi and ESP32 talking and using the camera feedback to guide the arm toward detected objects.
 
-From there, the goal is a fully autonomous demo: **find an object, pick it up, locate the goal, and place it.**
+From there, the goal is a fully autonomous demo: find an object, pick it up, locate the goal, and place it.
