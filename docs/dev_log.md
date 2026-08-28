@@ -323,3 +323,16 @@
     - Capture and label goal object dataset
     - Retrain YOLO with Creeper and goal classes
     - Begin integrating vision detections with robot control
+
+## August 28 2026
+- Expanded CV dataset with images of new `goal` object
+- Updated dataset for multi-class detection
+- Retrained YOLO model on expanded dataset
+- Retrained YOLO model for multi-class `creeper` and `goal` detection. Best epoch:
+  - Validation mAP50: 0.994
+  - Validation mAP50-95: 0.940
+  - Precision: 1.00
+  - Recall: 0.961
+- Next:
+  - Test new model on live Raspberry Pi camera feed
+  - Begin integrating vision output with arm control
