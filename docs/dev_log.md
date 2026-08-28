@@ -330,9 +330,9 @@
 - Retrained YOLO model on expanded dataset
 - Retrained YOLO model for multi-class `creeper` and `goal` detection. Best epoch:
   - Validation mAP50: 0.994
-  - Validation mAP50-95: 0.940
-  - Precision: 1.00
-  - Recall: 0.961
+  - Validation mAP50-95: 0.975
+  - Precision: 0.989
+  - Recall: 0.960
 - Next:
   - Test new model on live Raspberry Pi camera feed
   - Begin integrating vision output with arm control
