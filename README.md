@@ -51,7 +51,7 @@ The arm is controlled by an **ESP32** and uses a **Raspberry Pi 5 with an eye-in
 
 ## Mechanical Design
 
-The arm was designed from scratch in **Fusion 360** and went through several iterations as I built and tested it.
+The arm was designed from scratch in **Fusion 360** and went through a few iterations as I built and tested it.
 
 The base is driven by a NEMA 17 stepper motor, while the shoulder, elbow, wrist, and gripper are servo-driven. The final arm has control over:
 
