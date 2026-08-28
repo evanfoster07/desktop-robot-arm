@@ -67,8 +67,46 @@ def run_inference(frame):
             "center": [cx, cy]
         })
 
-    # Draw YOLO boxes and labels onto the frame
-    annotated_frame = result.plot()
+    # Choose box colours by class
+    # OpenCV uses BGR
+    CLASS_COLORS = {
+        0: (0, 100, 0),   # creeper - dark green
+        1: (0, 0, 255),   # goal - red
+    }
+
+    # Start with the original frame
+    annotated_frame = frame.copy()
+
+    # Draw each detection manually
+    for detection in detections:
+
+        class_id = detection["class_id"]
+        confidence = detection["confidence"]
+
+        x1, y1, x2, y2 = map(int, detection["box"])
+
+        color = CLASS_COLORS.get(class_id, (255, 255, 255))
+        label = f"{model.names[class_id]} {confidence:.2f}"
+
+        # Bounding box
+        cv2.rectangle(
+            annotated_frame,
+            (x1, y1),
+            (x2, y2),
+            color,
+            3
+        )
+
+        # Label
+        cv2.putText(
+            annotated_frame,
+            label,
+            (x1, max(y1 - 10, 20)),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.8,
+            color,
+            2
+        )
 
     return annotated_frame, detections
 
