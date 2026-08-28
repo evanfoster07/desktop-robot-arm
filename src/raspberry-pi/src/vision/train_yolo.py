@@ -9,7 +9,7 @@ def main():
 
     model.train(
         data="dataset/data.yaml",
-        epochs=20,
+        epochs=30,
         imgsz=640,
         freeze=10,
         project=output_dir,

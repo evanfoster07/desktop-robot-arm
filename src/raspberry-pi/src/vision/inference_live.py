@@ -7,7 +7,7 @@ import cv2
 app = Flask(__name__)
 
 # Load trained YOLO model once when script starts
-model = YOLO("src/vision/runs/detect/creeper/weights/best.pt")
+model = YOLO("src/vision/runs/detect/creeper-2/weights/best.pt")
 
 # Create camera once
 picam2 = Picamera2()
