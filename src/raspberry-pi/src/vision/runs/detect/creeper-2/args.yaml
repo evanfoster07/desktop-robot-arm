@@ -13,7 +13,7 @@ cache: false
 device: ''
 workers: 8
 project: C:\Users\tashl\OneDrive\Desktop\Documents\GitHub\desktop-robot-arm\src\raspberry-pi\src\vision\runs\detect
-name: creeper-3
+name: creeper-2
 exist_ok: false
 pretrained: true
 cls_remap: true
@@ -113,4 +113,4 @@ auto_augment: randaugment
 erasing: 0.4
 cfg: null
 tracker: tracktrack.yaml
-save_dir: C:\Users\tashl\OneDrive\Desktop\Documents\GitHub\desktop-robot-arm\src\raspberry-pi\src\vision\runs\detect\creeper-3
+save_dir: C:\Users\tashl\OneDrive\Desktop\Documents\GitHub\desktop-robot-arm\src\raspberry-pi\src\vision\runs\detect\creeper-2
