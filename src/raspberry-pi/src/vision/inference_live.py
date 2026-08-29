@@ -3,6 +3,7 @@ from picamera2 import Picamera2
 from libcamera import Transform
 from ultralytics import YOLO
 import cv2
+from tracking import *
 
 app = Flask(__name__)
 
@@ -107,6 +108,31 @@ def run_inference(frame):
             color,
             2
         )
+
+        # Only track creeper for box error
+        if detection["class_id"] != 0:
+            continue
+
+        tracking = get_box_error(
+            detection["box"],
+            frame.shape[1],
+            frame.shape[0]
+        )
+
+        error_x, error_y = tracking["error_norm"]
+
+        correction_right, correction_down, centered_x, centered_y = get_tracking_correction(error_x, error_y, gain=0.1)
+
+        BASE_ANGLE = 0.0
+        TOOL_PITCH = 0.0
+
+        robot_dx, robot_dy, robot_dz = camera_correction_to_robot(correction_right, correction_down, BASE_ANGLE, TOOL_PITCH)
+
+        if centered_x and centered_y:
+            print("Creeper centered")
+        else:
+            print(f"Robot correction: " f"dx={robot_dx:.3f}, " f"dy={robot_dy:.3f}, " f"dz={robot_dz:.3f}")
+
 
     return annotated_frame, detections
 
