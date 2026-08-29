@@ -333,6 +333,18 @@
   - Validation mAP50-95: 0.975
   - Precision: 0.989
   - Recall: 0.960
+  
 - Next:
   - Test new model on live Raspberry Pi camera feed
   - Begin integrating vision output with arm control
+
+## August 29, 2026
+- Added `tracking.py` to begin closed-loop visual tracking.
+- Implemented functions to calculate detected object centers and pixel error relative to the camera target point
+- Added horizontal and vertical correction logic using a configurable deadzone
+- Tested tracking calculations using hard-coded bounding boxes and confirmed expected directions
+
+- Next:
+    - Implement Pi <-> ESP32 communication to retrieve the arm's current joint/orientation state
+    - Use the current arm state with visual tracking error to determine and apply movement corrections
+    - Begin closed-loop visual centering
