@@ -33,7 +33,7 @@ def get_box_error(
     }
 
 
-def get_tracking_correction(error_x, error_y, gain=10.0, deadband=0.05):
+def get_tracking_correction(error_x, error_y, gain=10.0, deadband=0.0):
     dx = 0.0
     dy = 0.0
     centered_x = True
