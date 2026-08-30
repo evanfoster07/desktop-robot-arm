@@ -89,6 +89,34 @@ namespace {
         }
 
 
+        // Values formatted for Pi 
+        if (command == "GET_STATE" || command == "get_state") {
+
+            const JointAngles joints = robotArm->getCurrentJointAngles();
+            const CartesianPose pose = robotArm->getCurrentPose();
+
+            // Machine-readable state for Raspberry Pi
+            Serial.print("STATE ");
+            Serial.print(joints.base);
+            Serial.print(" ");
+
+            Serial.print(pose.x);
+            Serial.print(" ");
+
+            Serial.print(pose.y);
+            Serial.print(" ");
+
+            Serial.print(pose.z);
+            Serial.print(" ");
+
+            Serial.print(pose.pitch);
+            Serial.print(" ");
+
+            Serial.println(pose.roll);
+
+            return;
+        }
+
         
         // Commands below this point all require a numeric value
 
@@ -165,6 +193,23 @@ namespace {
         }
     }
 
+    void executeCartesianPoseCommand(float x, float y, float z, float pitch, float roll) {
+        CartesianPose target{
+            x,
+            y,
+            z,
+            pitch,
+            roll
+        };
+
+        if (robotArm->moveToPose(target)) {
+            Serial.println("POSE_OK");
+        }
+        else {
+            Serial.println("POSE_FAIL");
+        }
+    }
+
 
     void processInputBuffer() {
 
@@ -197,6 +242,40 @@ namespace {
             return;
         }
 
+        // Cartesian pose command:
+        // move_pose x y z pitch roll
+        if (command == "move_pose") {
+
+            float x;
+            float y;
+            float z;
+            float pitch;
+            float roll;
+
+            const int valuesRead = sscanf(
+                valueString.c_str(),
+                "%f %f %f %f %f",
+                &x,
+                &y,
+                &z,
+                &pitch,
+                &roll
+            );
+
+            // Five arguments means Cartesian pose command
+            if (valuesRead == 5) {
+
+                executeCartesianPoseCommand(
+                    x,
+                    y,
+                    z,
+                    pitch,
+                    roll
+                );
+
+                return;
+            }
+        }
 
         const int value = valueString.toInt();  // Convert value to integer
 
