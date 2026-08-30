@@ -21,9 +21,6 @@ void setup()
 
     Serial.println("Robot arm controller ready");
 
-
-    // Temporary IK/FK verification test
-    
 }
 
 void loop()
