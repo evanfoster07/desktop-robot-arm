@@ -3,6 +3,8 @@ from picamera2 import Picamera2
 from libcamera import Transform
 from ultralytics import YOLO
 import cv2
+import time
+from concurrent.futures import ThreadPoolExecutor
 from tracking import *
 from arm_serial import ArmSerial
 
@@ -24,7 +26,79 @@ picam2.configure(config)
 picam2.start()
 
 arm = ArmSerial()
-correction_sent = False
+
+# Send at most one correction per interval. This gives the arm time to move
+# without permanently disabling continuous tracking or flooding the ESP32.
+CORRECTION_INTERVAL_S = 1.0
+last_correction_time = 0.0
+
+# Serial communication runs on this single background worker so waiting for
+# the ESP32 never prevents the browser stream from receiving its next frame.
+control_executor = ThreadPoolExecutor(max_workers=1)
+control_future = None
+
+
+def apply_tracking_correction(error_x, error_y, correction_right):
+    """Get the arm state and send one tracking correction in the background."""
+
+    state = arm.get_state()
+
+    if state is None:
+        print("Tracking skipped: failed to get arm state")
+        return
+
+    # Use wrist pitch for vertical image correction.
+    PITCH_GAIN_DEG = 10.0
+    MAX_PITCH_STEP_DEG = 3.0
+
+    pitch_step = max(
+        -MAX_PITCH_STEP_DEG,
+        min(MAX_PITCH_STEP_DEG, -PITCH_GAIN_DEG * error_y)
+    )
+
+    target_pitch = state["pitch"] + pitch_step
+
+    # Use XYZ movement only for horizontal image correction.
+    robot_dx, robot_dy, robot_dz = camera_correction_to_robot(
+        correction_right,
+        0.0,
+        state["base"],
+        state["pitch"]
+    )
+
+    MAX_STEP_MM = 5.0
+
+    robot_dx = max(-MAX_STEP_MM, min(MAX_STEP_MM, robot_dx))
+    robot_dy = max(-MAX_STEP_MM, min(MAX_STEP_MM, robot_dy))
+    robot_dz = max(-MAX_STEP_MM, min(MAX_STEP_MM, robot_dz))
+
+    target_x = state["x"] + robot_dx
+    target_y = state["y"] + robot_dy
+    target_z = state["z"] + robot_dz
+
+    arm.move_pose(
+        target_x,
+        target_y,
+        target_z,
+        target_pitch,
+        state["roll"]
+    )
+
+    print(
+        "Tracking move: "
+        f"error=({error_x:.3f}, {error_y:.3f}), "
+        f"delta=({robot_dx:.2f}, {robot_dy:.2f}, {robot_dz:.2f}) mm, "
+        f"pitch_step={pitch_step:.2f} deg"
+    )
+
+
+def report_control_error(future):
+    """Print exceptions raised by the background control worker"""
+
+    exception = future.exception()
+
+    if exception is not None:
+        print(f"Tracking control error: {exception}")
 
 def run_inference(frame):
     """
@@ -38,7 +112,7 @@ def run_inference(frame):
             List containing useful information for each detection
     """
 
-    global correction_sent
+    global last_correction_time, control_future
 
     # Run YOLO
     results = model(
@@ -114,49 +188,52 @@ def run_inference(frame):
             2
         )
 
-        # Only track creeper for box error
-        if detection["class_id"] != 0:
-            continue
+    # Track only the highest-confidence creeper 
+    # Acting inside the drawing loop could send multiple corrections for one frame
+    creepers = [d for d in detections if d["class_id"] == 0]
 
-        tracking = get_box_error(
-            detection["box"],
-            frame.shape[1],
-            frame.shape[0]
+    if not creepers:
+        return annotated_frame, detections
+
+    creeper = max(creepers, key=lambda detection: detection["confidence"])
+
+    tracking = get_box_error(
+        creeper["box"],
+        frame.shape[1],
+        frame.shape[0]
+    )
+
+    error_x, error_y = tracking["error_norm"]
+
+    correction_right, _, centered_x, centered_y = get_tracking_correction(
+        error_x,
+        error_y,
+        gain=10.0,
+        deadband=0.05
+    )
+
+    # Do not request arm state when no move is needed.
+    if centered_x and centered_y:
+        return annotated_frame, detections
+
+    now = time.monotonic()
+
+    if now - last_correction_time < CORRECTION_INTERVAL_S:
+        return annotated_frame, detections
+
+    # Do not queue another correction while the previous serial operation is
+    # still running. The video path only schedules work and returns immediately.
+    if control_future is None or control_future.done():
+        last_correction_time = now
+
+        control_future = control_executor.submit(
+            apply_tracking_correction,
+            error_x,
+            error_y,
+            correction_right
         )
 
-        error_x, error_y = tracking["error_norm"]
-
-        correction_right, correction_down, centered_x, centered_y = get_tracking_correction(error_x, error_y, gain=5.0)
-
-        state = arm.get_state()
-
-        robot_dx, robot_dy, robot_dz = camera_correction_to_robot(
-            correction_right,
-            correction_down,
-            state["base"],
-            state["pitch"]
-        )
-
-        MAX_STEP_MM = 5.0
-
-        robot_dx = max(-MAX_STEP_MM, min(MAX_STEP_MM, robot_dx))
-        robot_dy = max(-MAX_STEP_MM, min(MAX_STEP_MM, robot_dy))
-        robot_dz = max(-MAX_STEP_MM, min(MAX_STEP_MM, robot_dz))
-
-        target_x = state["x"] + robot_dx
-        target_y = state["y"] + robot_dy
-        target_z = state["z"] + robot_dz
-
-        if not correction_sent and not (centered_x and centered_y):
-            arm.move_pose(
-                target_x,
-                target_y,
-                target_z,
-                state["pitch"],
-                state["roll"]
-            )
-
-            correction_sent = True
+        control_future.add_done_callback(report_control_error)
 
 
     return annotated_frame, detections
@@ -173,11 +250,7 @@ def generate_frames():
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
         # Run object detection
-        annotated_frame, detections = run_inference(frame)
-
-        # Temporary debugging
-        if detections:
-            print(detections)
+        annotated_frame, _ = run_inference(frame)
 
         # Encode annotated image as JPEG for browser streaming
         success, buffer = cv2.imencode(".jpg", annotated_frame)
