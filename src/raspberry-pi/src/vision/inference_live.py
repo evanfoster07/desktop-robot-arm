@@ -4,6 +4,7 @@ from libcamera import Transform
 from ultralytics import YOLO
 import cv2
 from tracking import *
+from arm_serial import ArmSerial
 
 app = Flask(__name__)
 
@@ -22,6 +23,8 @@ config = picam2.create_video_configuration(
 picam2.configure(config)
 picam2.start()
 
+arm = ArmSerial()
+correction_sent = False
 
 def run_inference(frame):
     """
@@ -34,6 +37,8 @@ def run_inference(frame):
         detections:
             List containing useful information for each detection
     """
+
+    global correction_sent
 
     # Run YOLO
     results = model(
@@ -121,17 +126,37 @@ def run_inference(frame):
 
         error_x, error_y = tracking["error_norm"]
 
-        correction_right, correction_down, centered_x, centered_y = get_tracking_correction(error_x, error_y, gain=0.1)
+        correction_right, correction_down, centered_x, centered_y = get_tracking_correction(error_x, error_y, gain=5.0)
 
-        BASE_ANGLE = 0.0
-        TOOL_PITCH = 0.0
+        state = arm.get_state()
 
-        robot_dx, robot_dy, robot_dz = camera_correction_to_robot(correction_right, correction_down, BASE_ANGLE, TOOL_PITCH)
+        robot_dx, robot_dy, robot_dz = camera_correction_to_robot(
+            correction_right,
+            correction_down,
+            state["base"],
+            state["pitch"]
+        )
 
-        if centered_x and centered_y:
-            print("Creeper centered")
-        else:
-            print(f"Robot correction: " f"dx={robot_dx:.3f}, " f"dy={robot_dy:.3f}, " f"dz={robot_dz:.3f}")
+        MAX_STEP_MM = 5.0
+
+        robot_dx = max(-MAX_STEP_MM, min(MAX_STEP_MM, robot_dx))
+        robot_dy = max(-MAX_STEP_MM, min(MAX_STEP_MM, robot_dy))
+        robot_dz = max(-MAX_STEP_MM, min(MAX_STEP_MM, robot_dz))
+
+        target_x = state["x"] + robot_dx
+        target_y = state["y"] + robot_dy
+        target_z = state["z"] + robot_dz
+
+        if not correction_sent and not (centered_x and centered_y):
+            arm.move_pose(
+                target_x,
+                target_y,
+                target_z,
+                state["pitch"],
+                state["roll"]
+            )
+
+            correction_sent = True
 
 
     return annotated_frame, detections
