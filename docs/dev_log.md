@@ -348,3 +348,21 @@
     - Implement Pi <-> ESP32 communication to retrieve the arm's current joint/orientation state
     - Use the current arm state with visual tracking error to determine and apply movement corrections
     - Begin closed-loop visual centering
+
+## August 30 2026
+- Implemented Pi <-> ESP32 Serial communication for visual tracking control
+- Added commands to retrieve the arm's current Cartesian pose and orientation from the ESP32
+- Implemented camera-space -> robot-space transformation using current base angle and tool pitch
+- Integrated visual tracking corrections with Cartesian arm control
+    - Calculates robot XYZ correction from normalized bounding box error
+    - Added maximum movement clamp and single-correction safety for initial testing
+- Successfully tested full visual correction sequence
+    - YOLO detects Creeper and calculates tracking error
+    - Raspberry Pi converts error into robot-frame XYZ correction
+    - ESP32 receives corrected Cartesian pose and uses IK to move the arm
+    - Verified arm moves Creeper toward camera center
+
+- Next:
+    - Replace unreliable servo wiring with longer 22 AWG connections
+    - Implement repeated visual corrections for closed-loop centering
+    - Add motion sequencing to prevent new corrections while arm is moving
