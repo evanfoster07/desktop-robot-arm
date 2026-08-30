@@ -46,6 +46,16 @@ void beginStepper() {
 
     baseStepper.setMaxSpeed(StepperConfig::MAX_SPEED);
     baseStepper.setAcceleration(StepperConfig::ACCELERATION);
+
+
+    Serial.print("TMC connection: ");
+    Serial.println(stepperDriver.test_connection());
+
+    Serial.print("Configured microsteps: ");
+    Serial.println(stepperDriver.microsteps());
+
+    Serial.print("MSTEP register select: ");
+    Serial.println(stepperDriver.mstep_reg_select());
 }
 
 
