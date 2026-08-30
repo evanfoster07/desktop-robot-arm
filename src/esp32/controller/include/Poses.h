@@ -19,6 +19,23 @@ constexpr CartesianPose POSES[]
         90.0f
     },
 
+    // + y 10mm cam cal test 
+    {
+        22.63f,
+        10.00f,
+        287.45f,
+        10.00f,
+        90.0f
+    },
+
+    // + z 10 mm cam cal test
+    {
+        22.63f,
+        0.00f,
+        297.45f,
+        10.00f,
+        90.0f
+    },
 
     // Grab Pose 1 (Pickup, ground)
     {
