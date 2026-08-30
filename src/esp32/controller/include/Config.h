@@ -27,11 +27,11 @@ namespace StepperConfig {
     constexpr uint32_t UART_BAUD_RATE = 115200;
 
     //TMC2209 config
-    constexpr uint16_t RMS_CURRENT_MA = 1000;
+    constexpr uint16_t RMS_CURRENT_MA = 800;
     constexpr uint16_t MICROSTEPS = 16;
 
     constexpr float MAX_SPEED = 800.0f;
-    constexpr float ACCELERATION = 300.0f;
+    constexpr float ACCELERATION = 1000.0f;
 }
 
 namespace ServoConfig {
@@ -75,5 +75,5 @@ namespace JointMappingConfig
         1.0f
     };
 
-    constexpr float BASE_STEPS_PER_DEGREE = 1600.0f / 360.0f;   // Total steps per rev / 360 deg
+    constexpr float BASE_STEPS_PER_DEGREE = 3200.0f / 360.0f;   // Total steps per rev / 360 deg
 }
