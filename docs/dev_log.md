@@ -354,19 +354,44 @@
 - Added commands to retrieve the arm's current Cartesian pose and orientation from the ESP32
 - Implemented camera-space -> robot-space transformation using the current base angle and tool pitch
 - Integrated visual tracking corrections with Cartesian arm control
-    - Calculates robot XYZ corrections from normalized bounding box error
-    - Added configurable deadband, correction gain, and maximum movement clamps
-    - Tracks only the highest-confidence Creeper detection to prevent multiple commands from one frame
+    - Calculates robot XYZ corrections from normalized bounding box error
+    - Added configurable deadband, correction gain, and maximum movement clamps
+    - Tracks only the highest-confidence Creeper detection to prevent multiple commands from one frame
 - Improved serial communication reliability
 - Implemented continuous closed-loop visual servoing
 - Refactored tracking control to prevent the browser camera stream from freezing
-    - Moved ESP32 state requests and movement commands onto a background control thread
-    - Prevented new corrections from being queued while the previous serial operation is still running
-    - Added background error reporting and removed continuous detection printing
+    - Moved ESP32 state requests and movement commands onto a background control thread
+    - Prevented new corrections from being queued while the previous serial operation is still running
+    - Added background error reporting and removed continuous detection printing
 - Successfully tested continuous base and wrist tracking
 
 - Next:
-    - Capture close-up and partially cropped Creeper images from the arm camera
-    - Retrain the model for reliable detection at grabbing distance
-    - Implement incremental forward approach using normalized bounding-box size as the stopping condition
-    - Add approach and grabbing motion sequencing
+    - Capture close-up and partially cropped Creeper images from the arm camera
+    - Retrain the model for reliable detection at grabbing distance
+    - Implement incremental forward approach using normalized bounding-box size as the stopping condition
+    - Add approach and grabbing motion sequencing
+
+## August 31 2026
+- Refactored live inference to integrate the full autonomous pick-and-place sequence
+    - Added browser controls for starting/stopping autonomous motion
+    - Added browser input for sending manual ESP32 serial commands
+- Expanded visual tracking for autonomous approaching
+    - Added configurable target points and normalized bounding-box size metrics
+    - Switched vertical tracking corrections from pitch changes to Cartesian camera movement
+- Improved Pi <-> ESP32 motion handling
+    - Added pose acceptance/failure handling
+    - Added motion settling checks before issuing new corrections
+    - Added recovery attempts using smaller Cartesian moves and nearby pitch targets
+- Implemented autonomous pick-and-place state machine
+    - Centers and approaches the Creeper
+    - Grabs and returns to the viewing pose
+    - Detects and approaches the goal
+    - Drops the Creeper and retreats
+- Successfully completed first autonomous pick-and-place test
+- Added terminal grab logic for close-range pickup
+    - Switches from visual servoing to a calibrated final forward lurch before the Creeper leaves the camera view
+    - Added relative wrist pitch adjustment before closing the gripper
+
+- Next:
+    - Improve grab sequence and visual servoing smoothness and speed
+    - Test grab sequence with various initial object locations 
