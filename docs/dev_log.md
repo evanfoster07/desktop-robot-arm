@@ -350,19 +350,23 @@
     - Begin closed-loop visual centering
 
 ## August 30 2026
-- Implemented Pi <-> ESP32 Serial communication for visual tracking control
+- Implemented Pi <-> ESP32 serial communication for visual tracking control
 - Added commands to retrieve the arm's current Cartesian pose and orientation from the ESP32
-- Implemented camera-space -> robot-space transformation using current base angle and tool pitch
+- Implemented camera-space -> robot-space transformation using the current base angle and tool pitch
 - Integrated visual tracking corrections with Cartesian arm control
-    - Calculates robot XYZ correction from normalized bounding box error
-    - Added maximum movement clamp and single-correction safety for initial testing
-- Successfully tested full visual correction sequence
-    - YOLO detects Creeper and calculates tracking error
-    - Raspberry Pi converts error into robot-frame XYZ correction
-    - ESP32 receives corrected Cartesian pose and uses IK to move the arm
-    - Verified arm moves Creeper toward camera center
+    - Calculates robot XYZ corrections from normalized bounding box error
+    - Added configurable deadband, correction gain, and maximum movement clamps
+    - Tracks only the highest-confidence Creeper detection to prevent multiple commands from one frame
+- Improved serial communication reliability
+- Implemented continuous closed-loop visual servoing
+- Refactored tracking control to prevent the browser camera stream from freezing
+    - Moved ESP32 state requests and movement commands onto a background control thread
+    - Prevented new corrections from being queued while the previous serial operation is still running
+    - Added background error reporting and removed continuous detection printing
+- Successfully tested continuous base and wrist tracking
 
 - Next:
-    - Replace unreliable servo wiring with longer 22 AWG connections
-    - Implement repeated visual corrections for closed-loop centering
-    - Add motion sequencing to prevent new corrections while arm is moving
+    - Capture close-up and partially cropped Creeper images from the arm camera
+    - Retrain the model for reliable detection at grabbing distance
+    - Implement incremental forward approach using normalized bounding-box size as the stopping condition
+    - Add approach and grabbing motion sequencing
