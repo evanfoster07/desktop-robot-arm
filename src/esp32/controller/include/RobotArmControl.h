@@ -125,6 +125,8 @@ public:
     */
     bool moveToPose(const CartesianPose& target);
 
+    void adjustServoAngle(ServoId servoId, int deltaAngle);
+
 private:
     ForwardKinematics forwardKinematics;
     InverseKinematics inverseKinematics;

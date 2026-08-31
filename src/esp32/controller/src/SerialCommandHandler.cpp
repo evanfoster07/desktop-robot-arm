@@ -137,6 +137,9 @@ namespace {
         else if (command == "p") {
             robotArm->setServoAngle(ServoId::WristPitch, value);
         }
+        else if (command == "p_rel") {
+            robotArm->adjustServoAngle(ServoId::WristPitch, value);
+        }
         else if (command == "r") {
             robotArm->setServoAngle(ServoId::WristRoll, value);
         }

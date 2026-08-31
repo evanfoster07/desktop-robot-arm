@@ -297,3 +297,13 @@ bool RobotArmControl::moveToPose(const CartesianPose& target)
 
     return true;
 }
+
+void RobotArmControl::adjustServoAngle(ServoId servoId, int deltaAngle)
+{
+    int currentAngle = getServoJoint(servoId).currAngle;
+
+    setServoAngle(
+        servoId,
+        currentAngle + deltaAngle
+    );
+}
