@@ -395,3 +395,19 @@
 - Next:
     - Improve grab sequence and visual servoing smoothness and speed
     - Test grab sequence with various initial object locations 
+
+## September 1 2026
+- Tuned final lurch for more reliable Creeper pickup
+- Tested autonomous pickup from varied initial object positions
+- Began scripting and editing final demo video
+
+- Next:
+    - Finish editing demo video
+    - Update README.md with state of finished project
+
+## September 2 - September 5 2026 
+- Finished final demo video
+- Polished README.md
+    - Added successful pick-and-place demo gif with robot POV
+    - Updated project status and documented new features
+    - Elaborated on design process and added new challenged I faced
