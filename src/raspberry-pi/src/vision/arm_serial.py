@@ -10,7 +10,7 @@ class ArmSerial:
             port,
             baudrate,
             timeout=0.05,
-            write_timeout=0.5
+            write_timeout=0.5,
         )
         self.lock = threading.Lock()
         time.sleep(2)
@@ -18,23 +18,22 @@ class ArmSerial:
 
     def send_command(self, command):
         with self.lock:
-            self.serial.write((command + "\n").encode())
+            self._write_line(command)
 
     def run_command(self, command, response_window_s=0.20):
-        """Send a raw ESP32 command exactly as typed and collect any reply lines."""
         command = command.strip()
         if not command:
             return []
 
         with self.lock:
             self.serial.reset_input_buffer()
-            self.serial.write((command + "\n").encode())
+            self._write_line(command)
 
             lines = []
             deadline = time.monotonic() + response_window_s
 
             while time.monotonic() < deadline:
-                line = self.serial.readline().decode(errors="replace").strip()
+                line = self._read_line()
                 if line:
                     lines.append(line)
                     deadline = time.monotonic() + 0.05
@@ -44,44 +43,20 @@ class ArmSerial:
     def get_state(self):
         with self.lock:
             self.serial.reset_input_buffer()
-            self.serial.write(b"GET_STATE\n")
+            self._write_line("GET_STATE")
             deadline = time.monotonic() + 0.5
 
             while time.monotonic() < deadline:
-                line = self.serial.readline().decode(errors="replace").strip()
-                if not line.startswith("STATE "):
-                    continue
-
-                parts = line.split()
-                if len(parts) != 7:
-                    continue
-
-                try:
-                    return {
-                        "base": float(parts[1]),
-                        "x": float(parts[2]),
-                        "y": float(parts[3]),
-                        "z": float(parts[4]),
-                        "pitch": float(parts[5]),
-                        "roll": float(parts[6]),
-                    }
-                except ValueError:
-                    continue
+                state = self._parse_state(self._read_line())
+                if state is not None:
+                    return state
 
         print("Timed out waiting for STATE response")
         return None
 
     def move_pose(self, x, y, z, pitch, roll, return_reason=False):
-        """
-        Send one Cartesian pose to the ESP32.
-
-        By default this keeps the old boolean API. With return_reason=True it
-        returns (success, reason), allowing the motion sequence to distinguish
-        an explicit POSE_FAIL from a serial timeout.
-        """
         command = (
-            f"move_pose "
-            f"{x:.2f} {y:.2f} {z:.2f} "
+            f"move_pose {x:.2f} {y:.2f} {z:.2f} "
             f"{pitch:.2f} {roll:.2f}"
         )
 
@@ -90,11 +65,11 @@ class ArmSerial:
 
         with self.lock:
             self.serial.reset_input_buffer()
-            self.serial.write((command + "\n").encode())
+            self._write_line(command)
             deadline = time.monotonic() + 0.75
 
             while time.monotonic() < deadline:
-                line = self.serial.readline().decode(errors="replace").strip()
+                line = self._read_line()
 
                 if line == "POSE_OK":
                     success = True
@@ -112,10 +87,7 @@ class ArmSerial:
         if not success and reason == "response_timeout":
             print("Timed out waiting for POSE_OK / POSE_FAIL")
 
-        if return_reason:
-            return success, reason
-
-        return success
+        return (success, reason) if return_reason else success
 
     def move_pose_and_wait(
         self,
@@ -128,34 +100,19 @@ class ArmSerial:
         position_tolerance_mm=3.0,
         pitch_tolerance_deg=2.0,
         stable_samples=3,
-        return_reason=False
+        return_reason=False,
     ):
-        """
-        Send a Cartesian pose and wait for the tracked pose to settle.
-
-        return_reason=True returns:
-            (True, "complete")
-            (False, "rejected")
-            (False, "response_timeout")
-            (False, "settle_timeout")
-
-        This lets visual tracking safely retry only when the ESP32 explicitly
-        rejected a pose. A settle timeout is NOT immediately retried because
-        the arm may already have moved partway toward the target.
-        """
         accepted, reason = self.move_pose(
             x,
             y,
             z,
             pitch,
             roll,
-            return_reason=True
+            return_reason=True,
         )
 
         if not accepted:
-            if return_reason:
-                return False, reason
-            return False
+            return (False, reason) if return_reason else False
 
         deadline = time.monotonic() + timeout_s
         stable_count = 0
@@ -180,9 +137,7 @@ class ArmSerial:
             ):
                 stable_count += 1
                 if stable_count >= stable_samples:
-                    if return_reason:
-                        return True, "complete"
-                    return True
+                    return (True, "complete") if return_reason else True
             else:
                 stable_count = 0
 
@@ -192,14 +147,9 @@ class ArmSerial:
             "Timed out waiting for arm motion to settle at "
             f"({x:.1f}, {y:.1f}, {z:.1f}, {pitch:.1f})"
         )
-
-        if return_reason:
-            return False, "settle_timeout"
-
-        return False
+        return (False, "settle_timeout") if return_reason else False
 
     def adjust_wrist_pitch(self, delta_angle):
-        """Adjust wrist pitch relatively using the ESP32 `p_rel <delta>` command."""
         self.send_command(f"p_rel {int(delta_angle)}")
 
     def adjust_wrist_pitch_and_wait(self, delta_angle, settle_s=0.5):
@@ -218,3 +168,30 @@ class ArmSerial:
     def close(self):
         with self.lock:
             self.serial.close()
+
+    def _write_line(self, command):
+        self.serial.write((command + "\n").encode())
+
+    def _read_line(self):
+        return self.serial.readline().decode(errors="replace").strip()
+
+    @staticmethod
+    def _parse_state(line):
+        if not line.startswith("STATE "):
+            return None
+
+        parts = line.split()
+        if len(parts) != 7:
+            return None
+
+        try:
+            return {
+                "base": float(parts[1]),
+                "x": float(parts[2]),
+                "y": float(parts[3]),
+                "z": float(parts[4]),
+                "pitch": float(parts[5]),
+                "roll": float(parts[6]),
+            }
+        except ValueError:
+            return None

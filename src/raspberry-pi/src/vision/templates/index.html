@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+    <body>
+        <h1>Robot Arm YOLO Inference</h1>
+
+        <p>Sequence state: <b>{{ state }}</b></p>
+
+        <form action="{{ url_for('start_sequence') }}" method="post" style="display:inline;">
+            <button type="submit">Start Pick + Place</button>
+        </form>
+
+        <form action="{{ url_for('stop_sequence') }}" method="post" style="display:inline;">
+            <button type="submit">Stop Sequence</button>
+        </form>
+
+        <hr>
+
+        <h3>Manual ESP32 Command</h3>
+
+        <form action="{{ url_for('manual_command') }}" method="post">
+            <input
+                type="text"
+                name="command"
+                placeholder="s 90, e 120, g 30, fk, GET_STATE..."
+                style="width: 340px;"
+                autocomplete="off"
+                autofocus
+            >
+            <button type="submit">Send</button>
+        </form>
+
+        <p>
+            Same format as the ESP32 serial monitor. Manual commands are
+            blocked while the autonomous sequence is active.
+        </p>
+
+        <p><b>Last command:</b> {{ last_command }}</p>
+        <pre>{{ last_response }}</pre>
+
+        <hr>
+
+        <img src="{{ url_for('video_feed') }}">
+    </body>
+</html>
