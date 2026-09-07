@@ -14,6 +14,10 @@ The arm is controlled by an ESP32 and uses a Raspberry Pi 5 with an eye-in-hand 
 
 *Autonomous pick-and-place demo with the robot’s POV shown above*
 
+[![Watch the full demo](docs/images/YouTube-thumbnail.png)](https://youtube.com/shorts/6LVfA6hSM14?si=9LW-p4Ngw13JaFhd)
+
+▶️ [Watch the full YouTube demo](https://youtube.com/shorts/6LVfA6hSM14?si=9LW-p4Ngw13JaFhd)
+
 ## Features
 
 * Fully custom mechanical design in Fusion 360
