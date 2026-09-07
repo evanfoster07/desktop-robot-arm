@@ -305,3 +305,22 @@ The project has been developed and tested incrementally:
 * More generalized object classes
 * Depth estimation or stereo vision
 * Simulation / ROS integration
+
+## Third-Party CAD Models / Credits
+
+The following component models were sourced from the GrabCAD Community Library and used for CAD assembly/visualization purposes:
+
+- [JST XH 2.5 Connector Family](https://grabcad.com/library/jst-xh-2-5-connector-family-1) - by PENNEL Patrice
+- [JST PH2.0 B2B-PH-K-S](https://grabcad.com/library/jst-ph2-0-b2b-ph-k-s-1) - by Anton Mukhin
+- [Raspberry Pi 5 Single Board Computer](https://grabcad.com/library/raspberry-pi-5-single-board-computer-1) - by Ian T.
+- [TMC2209 Stepper Driver](https://grabcad.com/library/tmc2209-stepper-driver-1) - by Nelson Stoldt
+- [Double-Sided FR-4 Perfboards w/ M2 Corners](https://grabcad.com/library/double-sided-fr-4-perfboards-w-m2-corners-1) - by Steven Irwin
+- [PCB 5x7 Heart Rate](https://grabcad.com/library/pcb-5x7-heart-rate-1) - by Diogo Araujo
+- [NEMA 17 17HD40 Stepper](https://grabcad.com/library/nema-17-17hd40-stepper-1) - by Long Nguyen
+- [PCA9685](https://grabcad.com/library/pca9685-7) - by Sven Rindfleisch
+- [DS1021 Colored Male Pin Header 100mil (2.54 mm) Collection](https://grabcad.com/library/ds1021-colored-male-pin-header-100mil-2-54mm-collection-1) - by Sig Elso
+- [KF128 2.54 mm Pitch Terminal Block Family](https://grabcad.com/library/kf128-2-54mm-pitch-terminal-block-family-2-pin-to-16-pin-1) - by PENNEL Patrice
+- [Female Headers – Single Row](https://grabcad.com/library/female-headers-single-row-1) - by Mart Berghs
+- [ESP32-WROOM-32E Dev Kit, 40 Pins](https://grabcad.com/library/esp32-wroom-32e-dev-kit-40pins-1) - by Matteo
+
+All third-party CAD models remain the property of their respective creators.
