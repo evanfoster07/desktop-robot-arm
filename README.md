@@ -64,6 +64,8 @@ The arm is controlled by an ESP32 and uses a Raspberry Pi 5 with an eye-in-hand 
 
 The arm was designed from scratch in Fusion 360 and went through a few iterations as I built and tested it.
 
+The printable mechanical parts are available in [`main.3mf`](hardware/cad/main.3mf).
+
 The base is driven by a NEMA 17 stepper motor, while the shoulder, elbow, wrist, and gripper are servo-driven. The final arm has control over:
 
 1. Base rotation
@@ -119,6 +121,8 @@ The TMC2209 is configured through UART, allowing settings such as motor current 
 ![Base Electronics](docs/images/base-electronics.jpg)
 
 *Final electronics implementation inside the robot base.*
+
+The KiCad schematic and project files are available in [`kicad`](hardware/kicad/).
 
 ## Control System
 
@@ -212,6 +216,13 @@ Because some desired Cartesian corrections could produce unreachable or mechanic
 * Ultralytics YOLO - object detection
 * AccelStepper / TMCStepper - stepper control
 * Adafruit PCA9685 - servo control
+
+## Design Files
+
+Project design files are included in the repository:
+
+- [`hardware/cad/main.3mf`](hardware/cad/main.3mf) - 3D-printable robot arm parts
+- [`hardware/kicad/`](hardware/kicad/) - KiCad schematic/project files for the robot electronics
 
 ## Development Process
 
